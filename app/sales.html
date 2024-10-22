@@ -1,0 +1,32 @@
+<!-- app/sales.html -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Historial de Ventas</title>
+  <link rel="stylesheet" href="styles/sales.css">
+</head>
+<body>
+  <header>
+    <h1>Historial de Ventas</h1>
+  </header>
+  <main>
+    <input type=button name=boton value=Regresar onclick="window.close()">
+    <div style="height: 20px;"></div>
+    <table id="salesTable">
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Cantidad</th>
+          <th>Fecha de Venta</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Ventas se cargarán aquí -->
+      </tbody>
+    </table>
+  </main>
+  <script src="windows/salesWindow.js"></script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!-- app/productForm.html -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Producto</title>
+  <link rel="stylesheet" href="styles/productForm.css">
+</head>
+<body>
+  <input type=button name=boton value=Regresar onclick="window.close()">
+  <div style="height: 20px;"></div>
+  <h1 id="formTitle">Añadir Producto</h1>
+  <form id="productForm">
+    <label>Categoría:</label>
+    <input type="text" name="category" required>
+    <label>Descripción:</label>
+    <input type="text" name="description" required>
+    <label>Número de Serie:</label>
+    <input type="text" name="serial_number" required>
+    <label>Modelo:</label>
+    <input type="text" name="model" required>
+    <label>Año:</label>
+    <input type="number" name="year" required>
+    <label>Precio:</label>
+    <input type="number" name="price" step="0.01" required>
+    <label>Stock:</label>
+    <input type="number" name="stock" required>
+    <button type="submit">Guardar</button>
+  </form>
+  <script src="windows/productFormWindow.js"></script>
+</body>
+</html>

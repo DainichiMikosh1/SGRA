@@ -1,0 +1,33 @@
+<!-- app/orderHistory.html -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Historial de Pedidos</title>
+  <link rel="stylesheet" href="styles/orderHistory.css">
+</head>
+<body>
+  <header>
+    <h1>Historial de Pedidos al Proveedor</h1>
+  </header>
+  <main>
+    <input type=button name=boton value=Regresar onclick="window.close()">
+    <div style="height: 20px;"></div>
+    <table id="orderHistoryTable">
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Cantidad</th>
+          <th>Fecha de Pedido</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Los pedidos se cargarán aquí -->
+      </tbody>
+    </table>
+  </main>
+  <script src="windows/orderHistoryWindow.js"></script>
+</body>
+</html>

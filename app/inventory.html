@@ -1,0 +1,42 @@
+<!-- app/inventory.html -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Gestión de Inventario</title>
+  <link rel="stylesheet" href="styles/inventory.css">
+</head>
+<body>
+  <header>
+    <h1>Inventario de Piezas</h1>
+  </header>
+  <main>
+    <input type=button name=boton value=Regresar onclick="window.close()">
+    <div style="height: 20px;"></div>
+    <button id="addProductBtn">Añadir Producto</button>
+    <button id="generateOrderBtn">Generar Pedido</button>
+    <input type="text" id="searchInput" placeholder="Buscar piezas...">
+    <table id="inventoryTable">
+      <thead>
+        <tr>
+          <th>Categoría</th>
+          <th>Descripción</th>
+          <th>Número de Serie</th>
+          <th>Modelo</th>
+          <th>Año</th>
+          <th>Precio</th>
+          <th>Stock</th>
+          <th>Disponibilidad Proveedor</th>
+          <th>Precio Proveedor</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Aquí se cargarán los productos -->
+      </tbody>
+    </table>
+  </main>
+  <script src="windows/inventoryWindow.js"></script>
+</body>
+</html>

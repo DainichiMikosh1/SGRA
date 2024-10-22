@@ -1,0 +1,46 @@
+<!-- app/registerOrder.html -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Registrar Pedido</title>
+  <link rel="stylesheet" href="styles/registerOrder.css">
+</head>
+<body>
+  <header>
+    <h1>Registrar Pedido Recibido</h1>
+  </header>
+  <main>
+    <input type=button name=boton value=Regresar onclick="window.close()">
+    <div style="height: 20px;"></div>
+    <section id="order-list-section">
+      <h2>Pedidos Pendientes</h2>
+      <table id="orderTable">
+        <thead>
+          <tr>
+            <th>ID Pedido</th>
+            <th>Producto</th>
+            <th>Cantidad Pedida</th>
+            <th>Fecha de Pedido</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Los pedidos se cargarán aquí -->
+        </tbody>
+      </table>
+    </section>
+    <section id="order-details-section" style="display: none;">
+      <h2>Detalles del Pedido</h2>
+      <div id="orderDetails">
+        <!-- Los detalles del pedido seleccionado se mostrarán aquí -->
+      </div>
+      <button id="confirmReceptionBtn">Confirmar Recepción</button>
+      <button id="backToOrdersBtn">Volver a la Lista de Pedidos</button>
+    </section>
+  </main>
+  <script src="windows/registerOrderWindow.js"></script>
+</body>
+</html>
