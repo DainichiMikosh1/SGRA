@@ -1,33 +1,189 @@
-/* app/styles/productForm.css */
+/* styles/productForm.css */
+
+/* Importar la fuente Roboto */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+/* Reset de estilos básicos */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
 body {
-    font-family: Arial, sans-serif;
-    padding: 20px;
+  font-family: 'Roboto', sans-serif;
+  background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Estilos del Header */
+header {
+  width: 100%;
+  background-color: #6c63ff; /* Color consistente con el menú principal */
+  padding: 20px 0;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+header h1#formTitle {
+  color: #ffffff;
+  font-size: 28px;
+}
+
+/* Estilos del Main */
+main#product-form-section {
+  flex: 1;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Botón de Regresar */
+#backBtn {
+  display: flex;
+  align-items: center;
+  background-color: #6c63ff;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#backBtn img {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  transition: transform 0.3s;
+}
+
+#backBtn:hover {
+  background-color: #5750d3;
+}
+
+#backBtn:hover img {
+  transform: scale(1.1);
+}
+
+/* Espaciador */
+.spacer {
+  height: 20px;
+}
+
+/* Formulario */
+form#productForm {
+  background-color: #ffffff;
+  padding: 30px 40px;
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+}
+
+form#productForm label {
+  font-size: 16px;
+  color: #555555;
+  margin-bottom: 5px;
+}
+
+form#productForm input {
+  padding: 10px 15px;
+  margin-bottom: 20px;
+  border: 1px solid #dddddd;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.3s;
+}
+
+form#productForm input:focus {
+  border-color: #6c63ff;
+  outline: none;
+}
+
+form#productForm button#saveBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #6c63ff;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+form#productForm button#saveBtn img {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  transition: transform 0.3s;
+}
+
+form#productForm button#saveBtn:hover {
+  background-color: #5750d3;
+  transform: translateY(-2px);
+}
+
+form#productForm button#saveBtn:hover img {
+  transform: scale(1.1);
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+  form#productForm {
+    padding: 20px 30px;
   }
-  
-  h1 {
-    text-align: center;
-  }
-  
-  form {
-    display: flex;
-    flex-direction: column;
-    max-width: 400px;
-    margin: 0 auto;
-  }
-  
-  label {
-    margin-top: 10px;
-  }
-  
-  input {
-    padding: 8px;
+
+  form#productForm label {
     font-size: 14px;
   }
-  
-  button {
-    margin-top: 20px;
-    padding: 10px;
-    font-size: 16px;
+
+  form#productForm input {
+    font-size: 14px;
+    padding: 8px 12px;
   }
-  
+
+  form#productForm button#saveBtn {
+    font-size: 14px;
+    padding: 10px 16px;
+  }
+
+  form#productForm button#saveBtn img {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  form#productForm {
+    padding: 15px 20px;
+  }
+
+  form#productForm label {
+    font-size: 12px;
+  }
+
+  form#productForm input {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+
+  form#productForm button#saveBtn {
+    font-size: 12px;
+    padding: 8px 14px;
+  }
+
+  form#productForm button#saveBtn img {
+    width: 16px;
+    height: 16px;
+  }
+}

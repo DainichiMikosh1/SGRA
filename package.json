@@ -17,25 +17,26 @@
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "chart.js": "^4.4.5",
     "dotenv": "^16.4.5",
     "nodemailer": "^6.9.15",
     "sqlite3": "^5.1.7"
   },
   "build": {
-      "appId": "com.tuempresa.tuapp",
-      "productName": "Mi App Electron",
-      "files": [
-        "main.js",
-        "database.js",
-        "renderer.js",
-        "package.json",
-        "app/**/*",
-        "node_modules/**/*"
-      ],
-      "extraResources": [
-        {
-          "from": "app/data/database.db",
-          "to": "app/data/database.db"
+    "appId": "com.tuempresa.tuapp",
+    "productName": "Mi App Electron",
+    "files": [
+      "main.js",
+      "database.js",
+      "renderer.js",
+      "package.json",
+      "app/**/*",
+      "node_modules/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "app/data/database.db",
+        "to": "app/data/database.db"
       }
     ],
     "asarUnpack": [

@@ -1,0 +1,443 @@
+/* styles/reembolsos.css */
+
+/* Importar la fuente Roboto */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+/* Reset de estilos básicos */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Estilos del Header */
+header {
+  width: 100%;
+  background-color: #6c63ff;
+  padding: 20px 0;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+  color: #ffffff;
+  font-size: 28px;
+}
+
+/* Estilos del Main */
+main#refunds-section {
+  flex: 1;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Botón de Regresar */
+#backBtn {
+  display: flex;
+  align-items: center;
+  background-color: #6c63ff;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#backBtn img {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  transition: transform 0.3s;
+}
+
+#backBtn:hover {
+  background-color: #5750d3;
+}
+
+#backBtn:hover img {
+  transform: scale(1.1);
+}
+
+/* Espaciador */
+.spacer {
+  height: 20px;
+}
+
+/* Contenedor de Búsqueda */
+.search-container {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  max-width: 800px;
+  margin-bottom: 20px;
+}
+
+#searchSalesInput {
+  flex: 1;
+  padding: 10px 15px;
+  border: 1px solid #dddddd;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.3s;
+}
+
+#searchSalesInput:focus {
+  border-color: #6c63ff;
+  outline: none;
+}
+
+#searchBtn {
+  display: flex;
+  align-items: center;
+  background-color: #6c63ff;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#searchBtn img {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+  transition: transform 0.3s;
+}
+
+#searchBtn:hover {
+  background-color: #5750d3;
+}
+
+#searchBtn:hover img {
+  transform: scale(1.1);
+}
+
+/* Estilos de la Tabla de Ventas */
+#salesTable {
+  width: 100%;
+  max-width: 1000px;
+  border-collapse: collapse;
+  margin-bottom: 40px;
+}
+
+#salesTable thead {
+  background-color: #6c63ff;
+  color: #ffffff;
+}
+
+#salesTable th, #salesTable td {
+  padding: 12px 15px;
+  text-align: left;
+  border: 1px solid #dddddd;
+}
+
+#salesTable tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+#salesTable tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Estilos para las imágenes de los productos */
+#salesTable td img.product-img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+/* Sección de Detalles del Pedido */
+#sale-details-section {
+  width: 100%;
+  max-width: 800px;
+  background-color: #ffffff;
+  padding: 30px 40px;
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  margin-bottom: 40px;
+}
+
+#sale-details-section h2 {
+  margin-bottom: 20px;
+  color: #333333;
+  text-align: center;
+}
+
+#sale-details-section p {
+  margin-bottom: 15px;
+  font-size: 16px;
+  color: #555555;
+}
+
+#sale-details-section label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 16px;
+  color: #555555;
+}
+
+#sale-details-section input,
+#sale-details-section textarea {
+  width: 100%;
+  padding: 10px 15px;
+  margin-bottom: 20px;
+  border: 1px solid #dddddd;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.3s;
+}
+
+#sale-details-section input:focus,
+#sale-details-section textarea:focus {
+  border-color: #6c63ff;
+  outline: none;
+}
+
+/* Contenedor de Botones */
+.buttons-container {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.buttons-container button {
+  display: flex;
+  align-items: center;
+  background-color: #28a745;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.buttons-container button img {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  transition: transform 0.3s;
+}
+
+.buttons-container button:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+}
+
+.buttons-container button:hover img {
+  transform: scale(1.1);
+}
+
+#backToSalesBtn {
+  background-color: #6c63ff;
+}
+
+#backToSalesBtn:hover {
+  background-color: #5750d3;
+}
+
+/* Estilos de la Tabla de Reembolsos */
+#refundsTable {
+  width: 100%;
+  max-width: 1000px;
+  border-collapse: collapse;
+  margin-bottom: 40px;
+}
+
+#refundsTable thead {
+  background-color: #6c63ff;
+  color: #ffffff;
+}
+
+#refundsTable th, #refundsTable td {
+  padding: 12px 15px;
+  text-align: left;
+  border: 1px solid #dddddd;
+}
+
+#refundsTable tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+#refundsTable tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+  #backBtn {
+    width: 180px;
+    height: 50px;
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+
+  #backBtn img {
+    width: 18px;
+    height: 18px;
+  }
+
+  .search-container {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  #searchBtn {
+    justify-content: center;
+  }
+
+  #searchBtn img {
+    width: 18px;
+    height: 18px;
+  }
+
+  #salesTable th, #salesTable td,
+  #refundsTable th, #refundsTable td {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+
+  #salesTable td img.product-img,
+  #refundsTable td img.product-img {
+    width: 40px;
+    height: 40px;
+  }
+
+  #sale-details-section {
+    padding: 20px 30px;
+  }
+
+  #sale-details-section h2 {
+    font-size: 24px;
+  }
+
+  #sale-details-section p,
+  #sale-details-section label,
+  #sale-details-section input,
+  #sale-details-section textarea {
+    font-size: 14px;
+  }
+
+  #confirmReceptionBtn,
+  #backToSalesBtn {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+
+  .buttons-container button img {
+    width: 18px;
+    height: 18px;
+  }
+
+  #refundsTable th, #refundsTable td {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+
+  #refundsTable td img.product-img {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  #backBtn {
+    width: 160px;
+    height: 45px;
+    font-size: 12px;
+    padding: 6px 14px;
+  }
+
+  #backBtn img {
+    width: 16px;
+    height: 16px;
+  }
+
+  .search-container {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  #searchInput {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+
+  #searchBtn {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+
+  #searchBtn img {
+    width: 16px;
+    height: 16px;
+  }
+
+  #salesTable th, #salesTable td,
+  #refundsTable th, #refundsTable td {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
+  #salesTable td img.product-img,
+  #refundsTable td img.product-img {
+    width: 30px;
+    height: 30px;
+  }
+
+  #sale-details-section {
+    padding: 15px 20px;
+  }
+
+  #sale-details-section h2 {
+    font-size: 20px;
+  }
+
+  #sale-details-section p,
+  #sale-details-section label,
+  #sale-details-section input,
+  #sale-details-section textarea {
+    font-size: 12px;
+  }
+
+  #confirmReceptionBtn,
+  #backToSalesBtn {
+    font-size: 12px;
+    padding: 6px 14px;
+  }
+
+  .buttons-container button img {
+    width: 16px;
+    height: 16px;
+  }
+
+  #refundsTable th, #refundsTable td {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
+  #refundsTable td img.product-img {
+    width: 30px;
+    height: 30px;
+  }
+}

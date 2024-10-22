@@ -1,51 +1,357 @@
-/* app/styles/inventory.css */
+/* styles/inventory.css */
+
+/* Importar la misma fuente utilizada en otras páginas para mantener la uniformidad */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+/* Reset de estilos básicos */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
 body {
-    font-family: Arial, sans-serif;
+  font-family: 'Roboto', sans-serif;
+  background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Estilos del Header */
+header {
+  width: 100%;
+  background-color: #6c63ff; /* Color consistente con el menú principal */
+  padding: 20px 0;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+  color: #ffffff;
+  font-size: 28px;
+}
+
+/* Estilos del Main */
+main#inventory-section {
+  flex: 1;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Botón de Regresar */
+main#inventory-section input[type="button"] {
+  background-color: #6c63ff;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+main#inventory-section input[type="button"]:hover {
+  background-color: #5750d3;
+}
+
+/* Espaciador */
+.spacer {
+  height: 20px;
+}
+
+/* Contenedor de Botones de Acción */
+.button-group {
+  display: flex;
+  gap: 20px; /* Espacio entre los botones */
+  margin-bottom: 20px;
+}
+
+/* Botón de Regresar */
+#backBtn {
+  display: flex;
+  align-items: center;
+  background-color: #6c63ff;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#backBtn img {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  transition: transform 0.3s;
+}
+
+#backBtn:hover {
+  background-color: #5750d3;
+}
+
+#backBtn:hover img {
+  transform: scale(1.1);
+}
+
+/* Botones de Acción */
+.button-group button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 180px;
+  height: 100px;
+  background-color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+  padding: 10px;
+  text-align: center;
+}
+
+.button-group button img {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 10px;
+  transition: transform 0.3s;
+}
+
+.button-group button span {
+  font-size: 16px;
+  color: #333333;
+  font-weight: 500;
+}
+
+/* Efectos de Hover en Botones */
+.button-group button:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.button-group button:hover img {
+  transform: scale(1.1);
+}
+
+/* Campo de Búsqueda */
+#searchInput {
+  width: 100%;
+  max-width: 600px;
+  padding: 12px 15px;
+  margin: 20px 0;
+  border: 1px solid #dddddd;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.3s;
+}
+
+#searchInput:focus {
+  border-color: #6c63ff;
+  outline: none;
+}
+
+/* Estilos de la Tabla de Inventario */
+#inventoryTable {
+  width: 100%;
+  max-width: 1200px;
+  border-collapse: collapse;
+  margin-bottom: 40px;
+}
+
+#inventoryTable thead {
+  background-color: #6c63ff;
+  color: #ffffff;
+}
+
+#inventoryTable th, #inventoryTable td {
+  padding: 12px 15px;
+  text-align: left;
+  border: 1px solid #dddddd;
+}
+
+#inventoryTable tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+#inventoryTable tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Estilos de la Sección de Productos Más Vendidos */
+#top-products-section {
+  padding: 40px 20px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  max-width: 1200px;
+  margin: 0 auto 40px auto;
+}
+
+#top-products-section h2 {
+  color: #333333;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+#top-products-section .filters {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+#top-products-section label {
+  font-size: 16px;
+  color: #555555;
+}
+
+#top-products-section select {
+  padding: 8px 12px;
+  border: 1px solid #dddddd;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.3s;
+}
+
+#top-products-section select:focus {
+  border-color: #6c63ff;
+  outline: none;
+}
+
+#filterBtn {
+  background-color: #6c63ff;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#filterBtn:hover {
+  background-color: #5750d3;
+}
+
+/* Estilos de la Tabla de Productos Más Vendidos */
+#topProductsTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 30px;
+}
+
+#topProductsTable thead {
+  background-color: #6c63ff;
+  color: #ffffff;
+}
+
+#topProductsTable th, #topProductsTable td {
+  padding: 12px 15px;
+  text-align: left;
+  border: 1px solid #dddddd;
+}
+
+#topProductsTable tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+#topProductsTable tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Estilos del Canvas para el Gráfico */
+#topProductsChart {
+  width: 100%;
+  max-width: 800px;
+  height: 400px;
+  margin: 0 auto;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+  .button-group {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
   }
-  
-  header {
-    background-color: #2196F3;
-    color: white;
-    padding: 15px;
-    text-align: center;
+
+  .button-group button {
+    width: 180px;
+    height: 90px;
   }
-  
-  button {
-    margin-right: 10px;
-    padding: 10px 15px;
+
+  .button-group button img {
+    width: 35px;
+    height: 35px;
+    margin-bottom: 8px;
+  }
+
+  .button-group button span {
     font-size: 14px;
   }
-  
+
   #searchInput {
-    padding: 8px;
+    max-width: 100%;
+  }
+
+  #inventoryTable, #topProductsTable {
     font-size: 14px;
-    width: 200px;
-    margin-left: 10px;
   }
-  
-  #inventoryTable {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
+
+  #top-products-section .filters {
+    flex-direction: column;
+    align-items: flex-start;
   }
-  
-  #inventoryTable th, #inventoryTable td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: center;
+
+  #topProductsChart {
+    height: 300px;
   }
-  
-  #inventoryTable tr:nth-child(even) {
-    background-color: #f2f2f2;
+}
+
+@media (max-width: 480px) {
+  .button-group {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
   }
-  
-  #inventoryTable tr:hover {
-    background-color: #ddd;
+
+  .button-group button {
+    width: 160px;
+    height: 80px;
   }
-  
-  .editBtn {
-    padding: 5px 10px;
+
+  .button-group button img {
+    width: 30px;
+    height: 30px;
+    margin-bottom: 5px;
+  }
+
+  .button-group button span {
     font-size: 12px;
   }
-  
+
+  #searchInput {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+
+  #inventoryTable, #topProductsTable {
+    font-size: 12px;
+  }
+
+  #top-products-section .filters {
+    align-items: center;
+  }
+
+  #topProductsChart {
+    height: 250px;
+  }
+}

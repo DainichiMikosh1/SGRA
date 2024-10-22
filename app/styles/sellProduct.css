@@ -1,74 +1,328 @@
-/* app/styles/sellProduct.css */
+/* styles/sellProduct.css */
+
+/* Importar la fuente Roboto */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+/* Reset de estilos básicos */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
+  font-family: 'Roboto', sans-serif;
+  background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Estilos del Header */
+header {
+  width: 100%;
+  background-color: #6c63ff;
+  padding: 20px 0;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+  color: #ffffff;
+  font-size: 28px;
+}
+
+/* Estilos del Main */
+main#sell-product-section {
+  flex: 1;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Botón de Regresar */
+#backBtn {
+  display: flex;
+  align-items: center;
+  background-color: #6c63ff;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#backBtn img {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  transition: transform 0.3s;
+}
+
+#backBtn:hover {
+  background-color: #5750d3;
+}
+
+#backBtn:hover img {
+  transform: scale(1.1);
+}
+
+/* Espaciador */
+.spacer {
+  height: 20px;
+}
+
+/* Sección de Búsqueda de Productos */
+#product-search {
+  width: 100%;
+  max-width: 800px;
+  margin-bottom: 40px;
+}
+
+.search-container {
+  display: flex;
+  gap: 10px;
+}
+
+#searchInput {
+  flex: 1;
+  padding: 10px 15px;
+  border: 1px solid #dddddd;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.3s;
+}
+
+#searchInput:focus {
+  border-color: #6c63ff;
+  outline: none;
+}
+
+#searchBtn {
+  display: flex;
+  align-items: center;
+  background-color: #6c63ff;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#searchBtn img {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+  transition: transform 0.3s;
+}
+
+#searchBtn:hover {
+  background-color: #5750d3;
+}
+
+#searchBtn:hover img {
+  transform: scale(1.1);
+}
+
+/* Sección del Carrito */
+#cart {
+  width: 100%;
+  max-width: 1000px;
+}
+
+#cart h2 {
+  margin-bottom: 20px;
+  color: #333333;
+  text-align: center;
+}
+
+#cartTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+#cartTable thead {
+  background-color: #6c63ff;
+  color: #ffffff;
+}
+
+#cartTable th, #cartTable td {
+  padding: 12px 15px;
+  text-align: left;
+  border: 1px solid #dddddd;
+}
+
+#cartTable tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+#cartTable tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Estilos para las imágenes de los productos en el carrito */
+#cartTable td img.product-img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+/* Contenedor del Total */
+#totalContainer {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+  font-size: 18px;
+  color: #333333;
+}
+
+#totalContainer span {
+  font-weight: 700;
+}
+
+/* Botón de Confirmar Venta */
+#confirmSaleBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #28a745;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+#confirmSaleBtn img {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  transition: transform 0.3s;
+}
+
+#confirmSaleBtn:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+}
+
+#confirmSaleBtn:hover img {
+  transform: scale(1.1);
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+  #backBtn {
+    width: 180px;
+    height: 50px;
+    font-size: 14px;
+    padding: 8px 16px;
   }
-  
-  header {
-    background-color: #2196F3;
-    color: white;
-    padding: 15px;
-    text-align: center;
+
+  #backBtn img {
+    width: 18px;
+    height: 18px;
   }
-  
-  main {
-    padding: 20px;
+
+  #searchInput {
+    font-size: 14px;
+    padding: 8px 12px;
   }
-  
-  #product-search {
-    margin-bottom: 30px;
+
+  #searchBtn {
+    font-size: 14px;
+    padding: 8px 12px;
   }
-  
-  #searchResults {
-    margin-top: 10px;
+
+  #searchBtn img {
+    width: 18px;
+    height: 18px;
   }
-  
-  .product-item {
-    padding: 10px;
-    border: 1px solid #ddd;
-    margin-bottom: 5px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .product-item span {
-    flex-grow: 1;
-  }
-  
-  .product-item button {
-    margin-left: 10px;
-  }
-  
-  #cartTable {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
+
   #cartTable th, #cartTable td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: center;
+    padding: 10px 12px;
+    font-size: 14px;
   }
-  
-  #cartTable tr:nth-child(even) {
-    background-color: #f2f2f2;
+
+  #cartTable td img.product-img {
+    width: 40px;
+    height: 40px;
   }
-  
-  #cartTable tr:hover {
-    background-color: #ddd;
-  }
-  
+
   #totalContainer {
-    margin-top: 20px;
-    font-size: 18px;
-    text-align: right;
-  }
-  
-  #confirmSaleBtn {
-    margin-top: 20px;
-    padding: 10px;
     font-size: 16px;
   }
-  
+
+  #confirmSaleBtn {
+    font-size: 14px;
+    padding: 10px 16px;
+  }
+
+  #confirmSaleBtn img {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  #backBtn {
+    width: 160px;
+    height: 45px;
+    font-size: 12px;
+    padding: 6px 14px;
+  }
+
+  #backBtn img {
+    width: 16px;
+    height: 16px;
+  }
+
+  #searchInput {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+
+  #searchBtn {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+
+  #searchBtn img {
+    width: 16px;
+    height: 16px;
+  }
+
+  #cartTable th, #cartTable td {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
+  #cartTable td img.product-img {
+    width: 30px;
+    height: 30px;
+  }
+
+  #totalContainer {
+    font-size: 14px;
+  }
+
+  #confirmSaleBtn {
+    font-size: 12px;
+    padding: 8px 14px;
+  }
+
+  #confirmSaleBtn img {
+    width: 16px;
+    height: 16px;
+  }
+}

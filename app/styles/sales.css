@@ -1,35 +1,142 @@
-/* app/styles/sales.css */
-header {
-  background-color: #2196F3;
-  color: white;
-  padding: 15px;
-  text-align: center;
+/* styles/sales.css */
+
+/* Importar la fuente Roboto */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+/* Reset de estilos básicos */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-    font-family: Arial, sans-serif;
+  font-family: 'Roboto', sans-serif;
+  background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Estilos del Header */
+header {
+  width: 100%;
+  background-color: #6c63ff; /* Color consistente con el menú principal */
+  padding: 20px 0;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+  color: #ffffff;
+  font-size: 28px;
+}
+
+/* Estilos del Main */
+main#sales-section {
+  flex: 1;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Botón de Regresar */
+#backBtn {
+  display: flex;
+  align-items: center;
+  background-color: #6c63ff;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#backBtn img {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  transition: transform 0.3s;
+}
+
+#backBtn:hover {
+  background-color: #5750d3;
+}
+
+#backBtn:hover img {
+  transform: scale(1.1);
+}
+
+/* Espaciador */
+.spacer {
+  height: 20px;
+}
+
+/* Estilos de la Tabla de Ventas */
+#salesTable {
+  width: 100%;
+  max-width: 1000px;
+  border-collapse: collapse;
+  margin-bottom: 40px;
+}
+
+#salesTable thead {
+  background-color: #6c63ff;
+  color: #ffffff;
+}
+
+#salesTable th, #salesTable td {
+  padding: 12px 15px;
+  text-align: left;
+  border: 1px solid #dddddd;
+}
+
+#salesTable tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+#salesTable tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+  #backBtn {
+    width: 180px;
+    height: 50px;
+    font-size: 14px;
+    padding: 8px 16px;
   }
-  
-  header, main {
-    padding: 20px;
+
+  #backBtn img {
+    width: 18px;
+    height: 18px;
   }
-  
+
   #salesTable {
-    width: 100%;
-    border-collapse: collapse;
+    max-width: 90%;
+    font-size: 14px;
   }
-  
-  #salesTable th, #salesTable td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: center;
+}
+
+@media (max-width: 480px) {
+  #backBtn {
+    width: 160px;
+    height: 45px;
+    font-size: 12px;
+    padding: 6px 14px;
   }
-  
-  #salesTable tr:nth-child(even) {
-    background-color: #f2f2f2;
+
+  #backBtn img {
+    width: 16px;
+    height: 16px;
   }
-  
-  #salesTable tr:hover {
-    background-color: #ddd;
+
+  #salesTable {
+    max-width: 100%;
+    font-size: 12px;
   }
-  
+}

@@ -11,9 +11,12 @@
   <header>
     <h1>Historial de Pedidos al Proveedor</h1>
   </header>
-  <main>
-    <input type=button name=boton value=Regresar onclick="window.close()">
-    <div style="height: 20px;"></div>
+  <main id="order-history-section">
+    <button id="backBtn" onclick="window.close()">
+      <img src="images/back.png" alt="Regresar">
+      Regresar
+    </button>
+    <div class="spacer"></div>
     <table id="orderHistoryTable">
       <thead>
         <tr>

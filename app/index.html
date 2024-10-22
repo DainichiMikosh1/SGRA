@@ -7,16 +7,42 @@
 </head>
 <body>
   <header>
-    <h1>Gestor de inventario</h1> 
+    <h1>Menu</h1> 
   </header>
   <main>
-    <button id="openInventoryBtn">Gestionar Inventario</button>
-    <button id="openSalesBtn">Ver Historial de Ventas</button>
-    <button id="openOrderHistoryBtn">Ver Historial de Pedidos</button> 
-    <button id="openLowStockBtn">Ver Notificaciones de Stock Bajo</button>
-    <button id="openSellProductBtn">Realizar Venta</button>
-    <button id="openRegisterOrderBtn">Registrar Pedido Recibido</button>
+    <button id="openInventoryBtn">
+      <img src="images/inventario.png" alt="Inventario">
+      <span>Gestionar Inventario</span>
+    </button>
+    <button id="openSalesBtn">
+      <img src="images/ventas.png" alt="Ventas">
+      <span>Ver Historial de Ventas</span>
+    </button>
+    <button id="openOrderHistoryBtn">
+      <img src="images/pedidos.png" alt="Pedidos">
+      <span>Ver Historial de Pedidos</span>
+    </button>
+    <button id="openLowStockBtn">
+      <img src="images/stock_bajo.png" alt="Stock Bajo">
+      <span>Ver Notificaciones de Stock Bajo</span>
+    </button>
+    <button id="openSellProductBtn">
+      <img src="images/generate_order.png" alt="Realizar Venta">
+      <span>Realizar Venta</span>
+    </button>
+    <button id="openRegisterOrderBtn">
+      <img src="images/entregas.png" alt="Registrar Pedido">
+      <span>Registrar Pedido Recibido</span>
+    </button>
+    <button id="abrirReembolsosBtn">
+      <img src="images/reembolsos.png" alt="Reembolso">
+      <span>Procesar Reembolso</span>
+    </button>
   </main>
+  <section id="button-group">
+    <input type="button" name="boton" value="Salir" onclick="window.close()">
+    <div class="spacer"></div>
+  </section>
   <script src="windows/mainWindow.js"></script>
 </body>
 </html>

@@ -11,9 +11,13 @@
   <header>
     <h1>Registrar Pedido Recibido</h1>
   </header>
-  <main>
-    <input type=button name=boton value=Regresar onclick="window.close()">
-    <div style="height: 20px;"></div>
+  <main id="register-order-section">
+    <button id="backBtn" onclick="window.close()">
+      <img src="images/back.png" alt="Regresar">
+      Regresar
+    </button>
+    <div class="spacer"></div>
+    
     <section id="order-list-section">
       <h2>Pedidos Pendientes</h2>
       <table id="orderTable">
@@ -32,13 +36,22 @@
         </tbody>
       </table>
     </section>
+    
     <section id="order-details-section" style="display: none;">
       <h2>Detalles del Pedido</h2>
       <div id="orderDetails">
         <!-- Los detalles del pedido seleccionado se mostrarán aquí -->
       </div>
-      <button id="confirmReceptionBtn">Confirmar Recepción</button>
-      <button id="backToOrdersBtn">Volver a la Lista de Pedidos</button>
+      <div class="buttons-container">
+        <button id="confirmReceptionBtn">
+          <img src="../images/confirm.png" alt="Confirmar Recepción">
+          Confirmar Recepción
+        </button>
+        <button id="backToOrdersBtn">
+          <img src="../images/back.png" alt="Volver">
+          Volver a la Lista de Pedidos
+        </button>
+      </div>
     </section>
   </main>
   <script src="windows/registerOrderWindow.js"></script>

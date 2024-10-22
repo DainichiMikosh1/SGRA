@@ -1,0 +1,90 @@
+<!-- app/refunds.html -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Procesar Reembolso</title>
+  <link rel="stylesheet" href="styles/reembolsos.css">
+</head>
+<body>
+  <header>
+    <h1>Procesar Reembolso</h1>
+  </header>
+  <main id="refunds-section">
+    <!-- Historial de Ventas -->
+    <section id="sales-history-section">
+      <h2>Historial de Ventas</h2>
+      <button id="backBtn" onclick="window.close()">
+        <img src="images/back.png" alt="Regresar">
+        Regresar
+      </button>
+      <div class="spacer"></div>
+      <div class="search-container">
+        <input type="text" id="searchSalesInput" placeholder="Buscar ventas...">
+        <button id="searchBtn">
+          <img src="images/search.png" alt="Buscar">
+          Buscar
+        </button>
+      </div>
+      <table id="salesTable">
+        <thead>
+          <tr>
+            <th>ID Venta</th>
+            <th>Fecha</th>
+            <th>Producto</th>
+            <th>Cantidad Vendida</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Aquí se cargarán las ventas -->
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Detalle de la Venta Seleccionada -->
+    <section id="sale-details-section" style="display: none;">
+      <h2>Detalle de la Venta ID: <span id="selectedSaleId"></span></h2>
+      <p>Producto: <span id="selectedProductDescription"></span></p>
+      <p>Cantidad Vendida: <span id="selectedQuantity"></span></p>
+      
+      <label for="refundQuantity">Cantidad a Reembolsar:</label>
+      <input type="number" id="refundQuantity" min="1">
+      
+      <label for="reason">Razón del Reembolso:</label>
+      <textarea id="reason" rows="4"></textarea>
+      
+      <div class="buttons-container">
+        <button id="processRefundBtn">
+          <img src="../images/confirm.png" alt="Procesar">
+          Procesar Reembolso
+        </button>
+        <button id="backToSalesBtn">
+          <img src="../images/back.png" alt="Volver">
+          Volver al Historial de Ventas
+        </button>
+      </div>
+    </section>
+
+    <!-- Historial de Reembolsos -->
+    <section id="refunds-history-section">
+      <h2>Historial de Reembolsos</h2>
+      <table id="refundsTable">
+        <thead>
+          <tr>
+            <th>ID Reembolso</th>
+            <th>ID Venta</th>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Fecha</th>
+            <th>Razón</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Aquí se cargarán los reembolsos -->
+      </table>
+    </section>
+  </main>
+  <script src="windows/reembolsos.js"></script>
+</body>
+</html>

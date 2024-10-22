@@ -1,49 +1,83 @@
+/* styles/login.css */
+
+/* Importar una fuente elegante desde Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f2f2f2;
-  }
-  
-  .login-container {
-    width: 300px;
-    margin: 100px auto;
-    padding: 30px;
-    background-color: white;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-  }
-  
-  .login-container h1 {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  .login-container label {
-    display: block;
-    margin-top: 10px;
-  }
-  
-  .login-container input {
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-  }
-  
-  .login-container button {
-    width: 100%;
-    padding: 10px;
-    margin-top: 15px;
-    background-color: #2196F3;
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .login-container button:hover {
-    background-color: #1976D2;
-  }
-  
-  .error-message {
-    color: red;
-    margin-top: 10px;
-    text-align: center;
-  }  
+  font-family: 'Roboto', sans-serif;
+  background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-container {
+  background-color: #ffffff;
+  padding: 40px 30px;
+  border-radius: 10px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  width: 350px;
+  text-align: center;
+}
+
+.login-container h1 {
+  margin-bottom: 30px;
+  color: #333333;
+  font-size: 24px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  text-align: left;
+  margin-bottom: 5px;
+  color: #555555;
+  font-size: 14px;
+}
+
+input[type="text"],
+input[type="password"] {
+  padding: 12px 15px;
+  margin-bottom: 20px;
+  border: 1px solid #dddddd;
+  border-radius: 5px;
+  font-size: 14px;
+  transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus {
+  border-color: #6c63ff;
+  outline: none;
+}
+
+button {
+  padding: 12px 15px;
+  background-color: #6c63ff;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #5750d3;
+}
+
+.error-message {
+  margin-top: 15px;
+  color: #e74c3c;
+  font-size: 14px;
+}

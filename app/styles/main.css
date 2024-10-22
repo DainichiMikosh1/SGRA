@@ -1,22 +1,124 @@
-/* app/styles/main.css */
+/* styles/main.css */
+
+/* Importar una fuente elegante desde Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
 body {
-  margin: 0;
-  font-family: Arial, sans-serif;
+  font-family: 'Roboto', sans-serif;
+  background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 header {
-  background-color: #2196F3;
-  color: white;
-  padding: 15px;
+  width: 100%;
+  background-color: #6c63ff;
+  padding: 20px 0;
   text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+  color: #ffffff;
+  font-size: 28px;
 }
 
 main {
-  padding: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 40px 20px;
+  width: 100%;
+  max-width: 1200px;
 }
 
 button {
-  padding: 10px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 200px;
+  height: 200px;
+  background-color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+  padding: 20px;
+  text-align: center;
+}
+
+button img {
+  width: 60px;
+  height: 60px;
+  margin-bottom: 15px;
+  transition: transform 0.3s;
+}
+
+button span {
   font-size: 16px;
+  color: #333333;
+  font-weight: 500;
+}
+
+button:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+}
+
+button:hover ion-icon {
+  transform: scale(1.1);
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+  button {
+    width: 160px;
+    height: 160px;
+    padding: 15px;
+  }
+
+  button img {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 10px;
+  }
+
+  button span {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  main {
+    padding: 20px 10px;
+    gap: 15px;
+  }
+
+  button {
+    width: 140px;
+    height: 140px;
+    padding: 10px;
+  }
+
+  button img {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 8px;
+  }
+
+  button span {
+    font-size: 12px;
+  }
 }

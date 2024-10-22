@@ -11,11 +11,29 @@
   <header>
     <h1>Inventario de Piezas</h1>
   </header>
-  <main>
-    <input type=button name=boton value=Regresar onclick="window.close()">
-    <div style="height: 20px;"></div>
-    <button id="addProductBtn">Añadir Producto</button>
-    <button id="generateOrderBtn">Generar Pedido</button>
+  <main id="inventory-section">
+    <button id="backBtn" onclick="window.close()">
+      <img src="images/back.png" alt="Regresar">
+      Regresar
+    </button>
+    <div class="spacer"></div>
+    
+    <!-- Contenedor para los botones de acción -->
+    <div class="button-group">
+      <button id="addProductBtn">
+        <img src="images/add_product.png" alt="Añadir Producto">
+        <span>Añadir Producto</span>
+      </button>
+      <button id="generateOrderBtn">
+        <img src="images/generate_order.png" alt="Generar Pedido">
+        <span>Generar Pedido</span>
+      </button>
+      <button id="viewTopProductsBtn">
+        <img src="images/top_products.png" alt="Ver Productos Más Vendidos">
+        <span>Ver Productos Más Vendidos</span>
+      </button>
+    </div>
+    
     <input type="text" id="searchInput" placeholder="Buscar piezas...">
     <table id="inventoryTable">
       <thead>
@@ -37,6 +55,48 @@
       </tbody>
     </table>
   </main>
+
+  <!-- Nueva Sección de Productos Más Vendidos -->
+  <section id="top-products-section" style="display: none;">
+    <h2>Productos Más Vendidos</h2>
+    <!-- Filtros por Mes y Año -->
+    <div class="filters">
+      <label for="monthSelect">Mes:</label>
+      <select id="monthSelect">
+        <option value="">Todos</option>
+        <option value="01">Enero</option>
+        <option value="02">Febrero</option>
+        <option value="03">Marzo</option>
+        <option value="04">Abril</option>
+        <option value="05">Mayo</option>
+        <option value="06">Junio</option>
+        <option value="07">Julio</option>
+        <option value="08">Agosto</option>
+        <option value="09">Septiembre</option>
+        <option value="10">Octubre</option>
+        <option value="11">Noviembre</option>
+        <option value="12">Diciembre</option>
+      </select>
+      <label for="yearSelect">Año:</label>
+      <select id="yearSelect">
+        <option value="">Todos</option>
+      </select>
+      <button id="filterBtn">Filtrar</button>
+    </div>
+    <table id="topProductsTable">
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Unidades Vendidas</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Aquí se cargarán los productos más vendidos -->
+      </tbody>
+    </table>
+    <canvas id="topProductsChart"></canvas>
+  </section>
+
   <script src="windows/inventoryWindow.js"></script>
 </body>
 </html>

@@ -4,12 +4,157 @@ const { ipcRenderer } = require('electron');
 const path = require('path');
 const db = require(path.join(__dirname, '.', '..', 'database.js'));
 const fs = require('fs');
+const Chart = require('chart.js/auto'); // Importar Chart.js
 
 window.addEventListener('DOMContentLoaded', () => {
   const inventoryTableBody = document.querySelector('#inventoryTable tbody');
   const searchInput = document.getElementById('searchInput');
   const addProductBtn = document.getElementById('addProductBtn');
   const generateOrderBtn = document.getElementById('generateOrderBtn');
+  const inventorySection = document.getElementById('top-products-section');
+
+  const viewTopProductsBtn = document.getElementById('viewTopProductsBtn');
+  const topProductsSection = document.getElementById('top-products-section');
+  const monthSelect = document.getElementById('monthSelect');
+  const yearSelect = document.getElementById('yearSelect');
+  const filterBtn = document.getElementById('filterBtn');
+  const topProductsTableBody = document.querySelector('#topProductsTable tbody');
+  const topProductsChart = document.getElementById('topProductsChart');
+
+  viewTopProductsBtn.addEventListener('click', () => {
+    inventorySection.style.display = 'none';
+    topProductsSection.style.display = 'block';
+    loadYears(); // Cargar los años disponibles
+    loadTopProducts(); // Cargar los datos al abrir la sección
+  });
+
+  function loadYears() {
+    const currentYear = new Date().getFullYear();
+    yearSelect.innerHTML = '<option value="">Todos</option>'; // Limpiar y agregar opción 'Todos'
+  
+    for (let year = currentYear; year >= currentYear - 10; year--) {
+      const option = document.createElement('option');
+      option.value = year.toString();
+      option.textContent = year.toString();
+      yearSelect.appendChild(option);
+    }
+  }
+
+  function loadTopProducts() {
+    // Obtener el mes y año seleccionados
+    const month = monthSelect.value;
+    const year = yearSelect.value;
+  
+    // Construir la consulta SQL
+    let query = `
+      SELECT inventory.description, SUM(sales.quantity) as total_sold
+      FROM sales
+      JOIN inventory ON sales.product_id = inventory.id
+    `;
+    let params = [];
+  
+    // Agregar condiciones según el mes y año seleccionados
+    if (month && year) {
+      query += `
+        WHERE strftime('%m', sales.sale_date) = ? AND strftime('%Y', sales.sale_date) = ?
+      `;
+      params.push(month, year);
+    } else if (year) {
+      query += `
+        WHERE strftime('%Y', sales.sale_date) = ?
+      `;
+      params.push(year);
+    }
+  
+    query += `
+      GROUP BY sales.product_id
+      ORDER BY total_sold DESC
+      LIMIT 10
+    `;
+  
+    db.all(query, params, (err, rows) => {
+      if (err) {
+        console.error('Error al obtener los productos más vendidos:', err);
+      } else {
+        // Actualizar la tabla
+        updateTopProductsTable(rows);
+        // Actualizar la gráfica
+        updateChart(rows);
+      }
+    });
+  }
+
+  function updateTopProductsTable(data) {
+    // Limpiar la tabla
+    topProductsTableBody.innerHTML = '';
+    if (data.length === 0) {
+      const tr = document.createElement('tr');
+      const td = document.createElement('td');
+      td.colSpan = 2;
+      td.textContent = 'No hay datos para mostrar.';
+      tr.appendChild(td);
+      topProductsTableBody.appendChild(tr);
+      return;
+    }
+    // Agregar las filas a la tabla
+    data.forEach((row) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${row.description}</td>
+        <td>${row.total_sold}</td>
+      `;
+      topProductsTableBody.appendChild(tr);
+    });
+  }
+
+  let chart; // Variable global para almacenar la instancia de la gráfica
+
+  function updateChart(data) {
+    const ctx = topProductsChart.getContext('2d');
+  
+    // Si no hay datos, limpiar la gráfica
+    if (data.length === 0) {
+      if (chart) {
+        chart.destroy();
+      }
+      return;
+    }
+  
+    const labels = data.map((row) => row.description);
+    const quantities = data.map((row) => row.total_sold);
+  
+    // Si la gráfica ya existe, destruirla para crear una nueva
+    if (chart) {
+      chart.destroy();
+    }
+  
+    chart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Unidades Vendidas',
+          data: quantities,
+          backgroundColor: 'rgba(54, 162, 235, 0.6)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            precision: 0
+          }
+        }
+      }
+    });
+  }
+
+  filterBtn.addEventListener('click', () => {
+    loadTopProducts();
+  });
 
   // Función para cargar el inventario
   function loadInventory(searchTerm = '') {
@@ -113,6 +258,8 @@ window.addEventListener('DOMContentLoaded', () => {
             (err) => {
               if (err) {
                 console.error('Error al crear el pedido:', err);
+              } else {
+                console.log('Pedido creado exitosamente.');
               }
             }
           );
@@ -132,20 +279,21 @@ window.addEventListener('DOMContentLoaded', () => {
     let transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
+        user: "alvaradomando22@gmail.com",
+        pass: "zghf qhwk lbjf lrwp",
       },
     });
 
     let mailOptions = {
       from: process.env.EMAIL_USER,
-      to: 'proveedor@correo.com',
+      to: 'juandiegotorreslopez61@gmail.com',
       subject: 'Pedido de Reabastecimiento',
       text: `Estimado proveedor, necesitamos reabastecer los siguientes productos:\n\n${missingProducts}`,
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
+        alert('Error al enviar el correo.');
         return console.log('Error al enviar el correo:', error);
       }
       console.log('Correo enviado:', info.response);

@@ -6,6 +6,11 @@ const openOrderHistoryBtn = document.getElementById('openOrderHistoryBtn');
 const openLowStockBtn = document.getElementById('openLowStockBtn');
 const openSellProductBtn = document.getElementById('openSellProductBtn');
 const openRegisterOrderBtn = document.getElementById('openRegisterOrderBtn');
+const abrirReembolsosBtn = document.getElementById('abrirReembolsosBtn');
+
+abrirReembolsosBtn.addEventListener('click', () => {
+  ipcRenderer.send('open-refunds-window');
+});
 
 openInventoryBtn.addEventListener('click', () => {
   ipcRenderer.send('open-inventory-window');

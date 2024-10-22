@@ -1,68 +1,288 @@
+/* styles/registerOrder.css */
+
+/* Importar la fuente Roboto */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+/* Reset de estilos básicos */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
+  font-family: 'Roboto', sans-serif;
+  background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Estilos del Header */
+header {
+  width: 100%;
+  background-color: #6c63ff;
+  padding: 20px 0;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+  color: #ffffff;
+  font-size: 28px;
+}
+
+/* Estilos del Main */
+main#register-order-section {
+  flex: 1;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Botón de Regresar */
+#backBtn {
+  display: flex;
+  align-items: center;
+  background-color: #6c63ff;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#backBtn img {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  transition: transform 0.3s;
+}
+
+#backBtn:hover {
+  background-color: #5750d3;
+}
+
+#backBtn:hover img {
+  transform: scale(1.1);
+}
+
+/* Espaciador */
+.spacer {
+  height: 20px;
+}
+
+/* Sección de Lista de Pedidos */
+#order-list-section {
+  width: 100%;
+  max-width: 1000px;
+  margin-bottom: 40px;
+}
+
+#order-list-section h2 {
+  margin-bottom: 20px;
+  color: #333333;
+  text-align: center;
+}
+
+#orderTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#orderTable thead {
+  background-color: #6c63ff;
+  color: #ffffff;
+}
+
+#orderTable th, #orderTable td {
+  padding: 12px 15px;
+  text-align: left;
+  border: 1px solid #dddddd;
+}
+
+#orderTable tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+#orderTable tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Estilos para las imágenes de los productos */
+#orderTable td img.product-img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+/* Sección de Detalles del Pedido */
+#order-details-section {
+  width: 100%;
+  max-width: 800px;
+  background-color: #ffffff;
+  padding: 30px 40px;
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+#order-details-section h2 {
+  margin-bottom: 20px;
+  color: #333333;
+  text-align: center;
+}
+
+#orderDetails {
+  margin-bottom: 20px;
+  font-size: 16px;
+  color: #555555;
+}
+
+/* Contenedor de Botones */
+.buttons-container {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.buttons-container button {
+  display: flex;
+  align-items: center;
+  background-color: #28a745;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.buttons-container button img {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  transition: transform 0.3s;
+}
+
+.buttons-container button:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+}
+
+.buttons-container button:hover img {
+  transform: scale(1.1);
+}
+
+#backToOrdersBtn {
+  background-color: #6c63ff;
+}
+
+#backToOrdersBtn:hover {
+  background-color: #5750d3;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+  #backBtn {
+    width: 180px;
+    height: 50px;
+    font-size: 14px;
+    padding: 8px 16px;
   }
-  
-  header {
-    background-color: #2196F3;
-    color: white;
-    padding: 15px;
-    text-align: center;
+
+  #backBtn img {
+    width: 18px;
+    height: 18px;
   }
-  
-  main {
-    padding: 20px;
-  }
-  
-  #orderTable {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
+
   #orderTable th, #orderTable td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: center;
+    padding: 10px 12px;
+    font-size: 14px;
   }
-  
-  #orderTable tr:nth-child(even) {
-    background-color: #f2f2f2;
+
+  #orderTable td img.product-img {
+    width: 40px;
+    height: 40px;
   }
-  
-  #orderTable tr:hover {
-    background-color: #ddd;
+
+  #order-details-section {
+    padding: 20px 30px;
   }
-  
+
+  #order-details-section h2 {
+    font-size: 24px;
+  }
+
   #orderDetails {
-    margin-top: 20px;
+    font-size: 14px;
   }
-  
-  #orderDetails table {
+
+  .buttons-container button {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+
+  .buttons-container button img {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  #backBtn {
+    width: 160px;
+    height: 45px;
+    font-size: 12px;
+    padding: 6px 14px;
+  }
+
+  #backBtn img {
+    width: 16px;
+    height: 16px;
+  }
+
+  #orderTable th, #orderTable td {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
+  #orderTable td img.product-img {
+    width: 30px;
+    height: 30px;
+  }
+
+  #order-details-section {
+    padding: 15px 20px;
+  }
+
+  #order-details-section h2 {
+    font-size: 20px;
+  }
+
+  #orderDetails {
+    font-size: 12px;
+  }
+
+  .buttons-container {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .buttons-container button {
     width: 100%;
-    border-collapse: collapse;
+    font-size: 12px;
+    padding: 6px 14px;
   }
-  
-  #orderDetails th, #orderDetails td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: center;
+
+  .buttons-container button img {
+    width: 16px;
+    height: 16px;
   }
-  
-  #orderDetails tr:nth-child(even) {
-    background-color: #f2f2f2;
-  }
-  
-  #orderDetails tr:hover {
-    background-color: #ddd;
-  }
-  
-  button {
-    margin-top: 20px;
-    padding: 10px;
-    font-size: 16px;
-  }
-  
-  #backToOrdersBtn {
-    margin-left: 10px;
-  }
-  
+}

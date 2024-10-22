@@ -1,4 +1,4 @@
-<!-- app/productForm.html -->
+<!-- app/productForm.html --> 
 
 <!DOCTYPE html>
 <html lang="es">
@@ -8,26 +8,43 @@
   <link rel="stylesheet" href="styles/productForm.css">
 </head>
 <body>
-  <input type=button name=boton value=Regresar onclick="window.close()">
-  <div style="height: 20px;"></div>
-  <h1 id="formTitle">Añadir Producto</h1>
-  <form id="productForm">
-    <label>Categoría:</label>
-    <input type="text" name="category" required>
-    <label>Descripción:</label>
-    <input type="text" name="description" required>
-    <label>Número de Serie:</label>
-    <input type="text" name="serial_number" required>
-    <label>Modelo:</label>
-    <input type="text" name="model" required>
-    <label>Año:</label>
-    <input type="number" name="year" required>
-    <label>Precio:</label>
-    <input type="number" name="price" step="0.01" required>
-    <label>Stock:</label>
-    <input type="number" name="stock" required>
-    <button type="submit">Guardar</button>
-  </form>
+  <header>
+    <h1 id="formTitle">Añadir Producto</h1>
+  </header>
+  <main id="product-form-section">
+    <button id="backBtn" onclick="window.close()">
+      <img src="../images/back.png" alt="Regresar">
+      Regresar
+    </button>
+    <div class="spacer"></div>
+    <form id="productForm">
+      <label for="category">Categoría:</label>
+      <input type="text" id="category" name="category" required>
+
+      <label for="description">Descripción:</label>
+      <input type="text" id="description" name="description" required>
+
+      <label for="serial_number">Número de Serie:</label>
+      <input type="text" id="serial_number" name="serial_number" required>
+
+      <label for="model">Modelo:</label>
+      <input type="text" id="model" name="model" required>
+
+      <label for="year">Año:</label>
+      <input type="number" id="year" name="year" required>
+
+      <label for="price">Precio:</label>
+      <input type="number" id="price" name="price" step="0.01" required>
+
+      <label for="stock">Stock:</label>
+      <input type="number" id="stock" name="stock" required>
+
+      <button type="submit" id="saveBtn">
+        <img src="../images/save.png" alt="Guardar">
+        Guardar
+      </button>
+    </form>
+  </main>
   <script src="windows/productFormWindow.js"></script>
 </body>
 </html>

@@ -11,16 +11,26 @@
   <header>
     <h1>Realizar Venta</h1>
   </header>
-  <main>
-    <input type=button name=boton value=Regresar onclick="window.close()">
-    <div style="height: 20px;"></div>
+  <main id="sell-product-section">
+    <button id="backBtn" onclick="window.close()">
+      <img src="images/back.png" alt="Regresar">
+      Regresar
+    </button>
+    <div class="spacer"></div>
+    
     <section id="product-search">
-      <input type="text" id="searchInput" placeholder="Buscar producto por nombre o número de serie...">
-      <button id="searchBtn">Buscar</button>
+      <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Buscar producto por nombre o número de serie...">
+        <button id="searchBtn">
+          <img src="images/search.png" alt="Buscar">
+          Buscar
+        </button>
+      </div>
       <div id="searchResults">
         <!-- Los resultados de búsqueda se mostrarán aquí -->
       </div>
     </section>
+    
     <section id="cart">
       <h2>Carrito de Compras</h2>
       <table id="cartTable">
@@ -40,7 +50,10 @@
       <div id="totalContainer">
         <span>Total: $<span id="totalAmount">0.00</span></span>
       </div>
-      <button id="confirmSaleBtn">Confirmar Venta</button>
+      <button id="confirmSaleBtn">
+        <img src="images/confirm.png" alt="Confirmar Venta">
+        Confirmar Venta
+      </button>
     </section>
   </main>
   <script src="windows/sellProductWindow.js"></script>

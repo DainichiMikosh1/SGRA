@@ -91,6 +91,19 @@ db.serialize(() => {
         password_hash TEXT NOT NULL
       );
     `);
+
+    db.run(`
+      CREATE TABLE IF NOT EXISTS reembolsos (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        sale_id INTEGER,
+        product_id INTEGER,
+        quantity INTEGER,
+        refund_date TEXT,
+        reason TEXT,
+        FOREIGN KEY(sale_id) REFERENCES sales(id),
+        FOREIGN KEY(product_id) REFERENCES inventory(id)
+      );
+    `);
 }); 
 
 module.exports = db;
