@@ -11,7 +11,7 @@ if (!fs.existsSync(dataDir)) {
 }
 
 //const dbPath = path.join(process.resourcesPath, 'app', 'data', 'database.db');
-
+//CAMBIAR UBICACION DE LA BASE DE DATOS
 const dbPath = path.join(__dirname, 'app', 'data', 'database.db');
 
 // Abre la conexión a la base de datos
@@ -55,7 +55,8 @@ db.serialize(() => {
         model TEXT,
         year INTEGER,
         price REAL,
-        stock INTEGER
+        stock INTEGER,
+        image_path TEXT
       )
     `);
   

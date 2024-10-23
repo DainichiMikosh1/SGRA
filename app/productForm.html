@@ -13,11 +13,13 @@
   </header>
   <main id="product-form-section">
     <button id="backBtn" onclick="window.close()">
-      <img src="../images/back.png" alt="Regresar">
+      <img src="images/back.png" alt="Regresar">
       Regresar
     </button>
     <div class="spacer"></div>
-    <form id="productForm">
+    <form id="productForm" enctype="multipart/form-data">
+      <input type="file" id="productImage" name="image" accept="image/*" required />
+
       <label for="category">Categoría:</label>
       <input type="text" id="category" name="category" required>
 
@@ -40,7 +42,7 @@
       <input type="number" id="stock" name="stock" required>
 
       <button type="submit" id="saveBtn">
-        <img src="../images/save.png" alt="Guardar">
+        <img src="images/confirm.png" alt="Guardar">
         Guardar
       </button>
     </form>

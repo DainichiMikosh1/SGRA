@@ -186,4 +186,18 @@ form#productForm button#saveBtn:hover img {
     width: 16px;
     height: 16px;
   }
+
+  /* Estilos para el campo de imagen */
+  form#productForm input[type="file"] {
+    padding: 10px 15px;
+    border: 1px solid #dddddd;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+  }
+
+  form#productForm input[type="file"]:focus {
+    border-color: #6c63ff;
+    outline: none;
+  }
 }

@@ -156,57 +156,64 @@ window.addEventListener('DOMContentLoaded', () => {
     loadTopProducts();
   });
 
-  // Función para cargar el inventario
   function loadInventory(searchTerm = '') {
-    inventoryTableBody.innerHTML = '';
+    inventoryTableBody.innerHTML = ''; // Limpiar tabla antes de recargar datos
+
     let query = 'SELECT * FROM inventory';
     let params = [];
 
     if (searchTerm) {
-      query += ' WHERE description LIKE ? OR serial_number LIKE ? OR model LIKE ? OR year LIKE ?';
-      params = [`%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`];
+        query += ' WHERE description LIKE ? OR serial_number LIKE ? OR model LIKE ? OR year LIKE ?';
+        params = [`%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`];
     }
 
     db.all(query, params, (err, rows) => {
-      if (err) {
-        console.error('Error al cargar el inventario:', err);
-      } else {
-        rows.forEach((row) => {
-          const tr = document.createElement('tr');
+        if (err) {
+            console.error('Error al cargar el inventario:', err);
+        } else {
+            rows.forEach((row) => {
+                const tr = document.createElement('tr');
 
-          const supplierInfo = checkSupplierCatalog(row.serial_number);
-          const supplierAvailability = supplierInfo.availability ? 'Disponible' : 'No Disponible';
-          const supplierPrice = supplierInfo.price !== null ? supplierInfo.price : 'N/A';
+                const supplierInfo = checkSupplierCatalog(row.serial_number);
+                const supplierAvailability = supplierInfo.availability ? 'Disponible' : 'No Disponible';
+                const supplierPrice = supplierInfo.price !== null ? supplierInfo.price : 'N/A';
 
-          tr.innerHTML = `
-            <td>${row.category}</td>
-            <td>${row.description}</td>
-            <td>${row.serial_number}</td>
-            <td>${row.model}</td>
-            <td>${row.year}</td>
-            <td>${row.price}</td>
-            <td>${row.stock}</td>
-            <td>${supplierAvailability}</td>
-            <td>${supplierPrice}</td>
-            <td>
-              <button class="editBtn" data-id="${row.id}">Editar</button>
-            </td>
-          `;
+                // Obtener la ruta de la imagen y convertirla en una URL accesible
+                const imagePath = row.image_path ? path.join(__dirname, row.image_path) : '';
+                const imageUrl = imagePath ? `file://${imagePath}` : ''; // Generar URL con el prefijo `file://`
 
-          inventoryTableBody.appendChild(tr);
-        });
+                tr.innerHTML = `
+                    <td>${row.category}</td>
+                    <td>${row.description}</td>
+                    <td>${row.serial_number}</td>
+                    <td>${row.model}</td>
+                    <td>${row.year}</td>
+                    <td>${row.price}</td>
+                    <td>${row.stock}</td>
+                    <td>${supplierAvailability}</td>
+                    <td>${supplierPrice}</td>
+                    <td>
+                        <img src="${imageUrl}" alt="Imagen del Producto" style="max-width: 100px; height: auto;">
+                    </td>
+                    <td>
+                        <button class="editBtn" data-id="${row.id}">Editar</button>
+                    </td>
+                `;
 
-        // Agregar eventos a los botones de editar
-        const editButtons = document.querySelectorAll('.editBtn');
-        editButtons.forEach((button) => {
-          button.addEventListener('click', () => {
-            const productId = button.getAttribute('data-id');
-            ipcRenderer.send('open-add-product-window', productId);
-          });
-        });
-      }
+                inventoryTableBody.appendChild(tr);
+            });
+
+            // Agregar eventos a los botones de editar
+            const editButtons = document.querySelectorAll('.editBtn');
+            editButtons.forEach((button) => {
+                button.addEventListener('click', () => {
+                    const productId = button.getAttribute('data-id');
+                    ipcRenderer.send('open-add-product-window', productId);
+                });
+            });
+        }
     });
-  }
+}
 
   // Función para verificar el catálogo del proveedor
   function checkSupplierCatalog(serialNumber) {

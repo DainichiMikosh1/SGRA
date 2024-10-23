@@ -1,15 +1,16 @@
 const { ipcRenderer } = require('electron');
 const path = require('path');
-const db = require(path.join(__dirname, '.', '..', 'database.js'));
+const fs = require('fs');
+const db = require(path.join(__dirname, '..', 'database.js'));
 
 window.addEventListener('DOMContentLoaded', () => {
   const productForm = document.getElementById('productForm');
+  const productImage = document.getElementById('productImage');
   const formTitle = document.getElementById('formTitle');
 
   let isEditMode = false;
   let editProductId = null;
 
-  // Si se está editando un producto existente
   ipcRenderer.on('edit-product', (event, productId) => {
     formTitle.textContent = 'Editar Producto';
     isEditMode = true;
@@ -30,8 +31,7 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Evento de envío del formulario
-  productForm.addEventListener('submit', (e) => {
+  productForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const productData = {
@@ -44,10 +44,30 @@ window.addEventListener('DOMContentLoaded', () => {
       stock: parseInt(productForm.stock.value),
     };
 
+    const file = productImage.files[0];
+
+    if (file) {
+      const destDir = path.join(__dirname, 'images', 'productos'); // Ruta relativa hacia la carpeta images
+      if (!fs.existsSync(destDir)) {
+        fs.mkdirSync(destDir, { recursive: true }); // Crear la carpeta si no existe
+      }
+
+      const destPath = path.join(destDir, file.name);
+
+      try {
+        const arrayBuffer = await file.arrayBuffer(); // Leer archivo como ArrayBuffer
+        const buffer = Buffer.from(arrayBuffer); // Convertir a Buffer
+        fs.writeFileSync(destPath, buffer); // Guardar el archivo en la carpeta 'images'
+        productData.imagePath = `images/productos/${file.name}`; // Guardar la ruta en la BD
+      } catch (err) {
+        console.error('Error al guardar la imagen:', err);
+        return;
+      }
+    }
+
     if (isEditMode) {
-      // Actualizar producto existente
       db.run(
-        `UPDATE inventory SET category = ?, description = ?, serial_number = ?, model = ?, year = ?, price = ?, stock = ? WHERE id = ?`,
+        `UPDATE inventory SET category = ?, description = ?, serial_number = ?, model = ?, year = ?, price = ?, stock = ?, image_path = ? WHERE id = ?`,
         [
           productData.category,
           productData.description,
@@ -56,6 +76,7 @@ window.addEventListener('DOMContentLoaded', () => {
           productData.year,
           productData.price,
           productData.stock,
+          productData.imagePath || '',
           editProductId,
         ],
         function (err) {
@@ -68,10 +89,9 @@ window.addEventListener('DOMContentLoaded', () => {
         }
       );
     } else {
-      // Añadir nuevo producto
       db.run(
-        `INSERT INTO inventory (category, description, serial_number, model, year, price, stock)
-         VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        `INSERT INTO inventory (category, description, serial_number, model, year, price, stock, image_path) 
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           productData.category,
           productData.description,
@@ -80,6 +100,7 @@ window.addEventListener('DOMContentLoaded', () => {
           productData.year,
           productData.price,
           productData.stock,
+          productData.imagePath || '',
         ],
         function (err) {
           if (err) {
