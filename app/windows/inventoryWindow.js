@@ -179,7 +179,9 @@ window.addEventListener('DOMContentLoaded', () => {
                 const supplierPrice = supplierInfo.price !== null ? supplierInfo.price : 'N/A';
 
                 // Obtener la ruta de la imagen y convertirla en una URL accesible
-                const imagePath = row.image_path ? path.join(__dirname, row.image_path) : '';
+                //Camabiar dev mode o user mode
+                //const imagePath = row.image_path ? path.join(__dirname, row.image_path) : '';
+                const imagePath = row.image_path ? path.join(process.resourcesPath, row.image_path) : '';
                 const imageUrl = imagePath ? `file://${imagePath}` : ''; // Generar URL con el prefijo `file://`
 
                 tr.innerHTML = `

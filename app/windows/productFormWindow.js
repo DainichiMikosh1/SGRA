@@ -1,7 +1,10 @@
-const { ipcRenderer } = require('electron');
+const { ipcRenderer, remote } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const db = require(path.join(__dirname, '..', 'database.js'));
+
+// Ruta hacia la carpeta de imágenes en recursos externos
+const imagesDir = path.join(process.resourcesPath, 'images', 'productos');
 
 window.addEventListener('DOMContentLoaded', () => {
   const productForm = document.getElementById('productForm');
@@ -47,18 +50,17 @@ window.addEventListener('DOMContentLoaded', () => {
     const file = productImage.files[0];
 
     if (file) {
-      const destDir = path.join(__dirname, 'images', 'productos'); // Ruta relativa hacia la carpeta images
-      if (!fs.existsSync(destDir)) {
-        fs.mkdirSync(destDir, { recursive: true }); // Crear la carpeta si no existe
+      if (!fs.existsSync(imagesDir)) {
+        fs.mkdirSync(imagesDir, { recursive: true }); // Crear la carpeta si no existe
       }
 
-      const destPath = path.join(destDir, file.name);
+      const destPath = path.join(imagesDir, file.name);
 
       try {
         const arrayBuffer = await file.arrayBuffer(); // Leer archivo como ArrayBuffer
         const buffer = Buffer.from(arrayBuffer); // Convertir a Buffer
-        fs.writeFileSync(destPath, buffer); // Guardar el archivo en la carpeta 'images'
-        productData.imagePath = `images/productos/${file.name}`; // Guardar la ruta en la BD
+        fs.writeFileSync(destPath, buffer); // Guardar el archivo
+        productData.imagePath = path.relative(process.resourcesPath, destPath); // Guardar la ruta relativa
       } catch (err) {
         console.error('Error al guardar la imagen:', err);
         return;

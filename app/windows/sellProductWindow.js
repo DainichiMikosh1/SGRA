@@ -90,7 +90,9 @@ window.addEventListener('DOMContentLoaded', () => {
       const subtotal = item.price * item.quantity;
       totalAmount += subtotal;
 
-      const imagePath = item.ImagePath ? path.join(__dirname, item.ImagePath) : '';
+      //Cambiar dev mode o user mode
+      const imagePath = item.ImagePath ? path.join(process.resourcesPath, item.ImagePath) : '';
+      //const imagePath = item.ImagePath ? path.join(__dirname, item.ImagePath) : '';
       const imageUrl = imagePath ? `file://${imagePath}` : '';
 
       const tr = document.createElement('tr');

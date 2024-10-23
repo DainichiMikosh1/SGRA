@@ -23,8 +23,8 @@
     "sqlite3": "^5.1.7"
   },
   "build": {
-    "appId": "com.tuempresa.tuapp",
-    "productName": "Mi App Electron",
+    "appId": "com.BDS.SGRA",
+    "productName": "SGRA",
     "files": [
       "main.js",
       "database.js",
@@ -37,6 +37,10 @@
       {
         "from": "app/data/database.db",
         "to": "app/data/database.db"
+      },
+      {
+        "from": "app/images/productos",
+        "to": "images/productos"
       }
     ],
     "asarUnpack": [
