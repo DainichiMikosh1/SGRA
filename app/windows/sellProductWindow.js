@@ -71,6 +71,7 @@ window.addEventListener('DOMContentLoaded', () => {
           price: product.price,
           quantity: quantity,
           stock: product.stock,
+          ImagePath: product.image_path
         });
       } else {
         alert('La cantidad supera el stock disponible.');
@@ -89,8 +90,14 @@ window.addEventListener('DOMContentLoaded', () => {
       const subtotal = item.price * item.quantity;
       totalAmount += subtotal;
 
+      const imagePath = item.ImagePath ? path.join(__dirname, item.ImagePath) : '';
+      const imageUrl = imagePath ? `file://${imagePath}` : '';
+
       const tr = document.createElement('tr');
       tr.innerHTML = `
+        <td>
+        <img src="${imageUrl}" alt="Imagen del Producto" style="max-width: 100px; height: auto;">
+        </td>
         <td>${item.description}</td>
         <td>$${item.price}</td>
         <td>${item.quantity}</td>

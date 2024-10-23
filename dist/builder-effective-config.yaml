@@ -1,0 +1,26 @@
+directories:
+  output: dist
+  buildResources: build
+appId: com.tuempresa.tuapp
+productName: Mi App Electron
+files:
+  - filter:
+      - main.js
+      - database.js
+      - renderer.js
+      - package.json
+      - app/**/*
+      - node_modules/**/*
+extraResources:
+  - from: app/data/database.db
+    to: app/data/database.db
+asarUnpack:
+  - '**/node_modules/sqlite3/**'
+win:
+  target:
+    - nsis
+  icon: build/icon.ico
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+electronVersion: 33.0.1
