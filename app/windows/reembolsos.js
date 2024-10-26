@@ -25,16 +25,18 @@ window.addEventListener('DOMContentLoaded', () => {
   function loadSalesHistory(searchTerm = '') {
     salesTableBody.innerHTML = '';
     let query = `
-      SELECT sales.id, sales.sale_date, sales.product_id, sales.quantity, inventory.description
+      SELECT sales.id, sales.sale_date, sales.product_id, sales.subtotal, sales.quantity, inventory.description
       FROM sales
       JOIN inventory ON sales.product_id = inventory.id
     `;
     let params = [];
 
     if (searchTerm) {
-      query += ' WHERE sales.id LIKE ? OR sales.sale_date LIKE ? OR inventory.description LIKE ?';
+      query += ' WHERE sales.id LIKE ? OR sales.sale_date LIKE ? OR inventory.description LIKE ?'; 
       params = [`%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`];
     }
+
+    query += 'ORDER BY sales.sale_date DESC';
 
     db.all(query, params, (err, rows) => {
       if (err) {
@@ -47,6 +49,7 @@ window.addEventListener('DOMContentLoaded', () => {
             <td>${new Date(row.sale_date).toLocaleString()}</td>
             <td>${row.description}</td>
             <td>${row.quantity}</td>
+            <td>${row.subtotal}</td>
           `;
           tr.addEventListener('click', () => {
             selectedSale = row;

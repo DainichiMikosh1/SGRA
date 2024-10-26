@@ -10,9 +10,9 @@ if (!fs.existsSync(dataDir)) {
   fs.mkdirSync(dataDir);
 }
 
-const dbPath = path.join(process.resourcesPath, 'app', 'data', 'database.db');
+//const dbPath = path.join(process.resourcesPath, 'app', 'data', 'database.db');
 //CAMBIAR UBICACION DE LA BASE DE DATOS
-//const dbPath = path.join(__dirname, 'app', 'data', 'database.db');
+const dbPath = path.join(__dirname, 'app', 'data', 'database.db');
 
 // Abre la conexión a la base de datos
 const db = new sqlite3.Database(dbPath, (err) => {
@@ -67,6 +67,7 @@ db.serialize(() => {
         product_id INTEGER,
         quantity INTEGER,
         sale_date TEXT,
+        subtotal REAL,
         FOREIGN KEY(product_id) REFERENCES inventory(id)
       )
     `);

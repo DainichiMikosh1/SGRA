@@ -29,7 +29,7 @@ window.addEventListener('DOMContentLoaded', () => {
               const div = document.createElement('div');
               div.classList.add('product-item');
               div.innerHTML = `
-                <span>${row.description} marca: ${row.model} (Stock: ${row.stock}) - $${row.price}</span>
+                <span>${row.description} | marca: ${row.model} (Stock: ${row.stock}) - $${row.price}</span>
                 <input type="number" min="1" max="${row.stock}" value="1" id="quantity-${row.id}">
                 <button data-id="${row.id}">Agregar al Carrito</button>
               `;
@@ -102,7 +102,7 @@ window.addEventListener('DOMContentLoaded', () => {
         <img src="${imageUrl}" alt="Imagen del Producto" style="max-width: 100px; height: auto;">
         </td>
         <td>${item.description}</td>
-        td>${item.model}</td>
+        <td>${item.model}</td>
         <td>$${item.price}</td>
         <td>${item.quantity}</td>
         <td>$${subtotal.toFixed(2)}</td>
@@ -121,73 +121,76 @@ window.addEventListener('DOMContentLoaded', () => {
     totalAmountSpan.textContent = totalAmount.toFixed(2);
   }
 
-  // Función para confirmar la venta
-  function confirmSale() {
-    if (cart.length === 0) {
-      alert('El carrito está vacío.');
-      return;
-    }
-
-    // Iniciar una transacción
-    db.serialize(() => {
-      db.run('BEGIN TRANSACTION');
-
-      let errorOccurred = false;
-
-      cart.forEach((item) => {
-        // Verificar stock nuevamente
-        db.get('SELECT stock FROM inventory WHERE id = ?', [item.id], (err, row) => {
-          if (err) {
-            console.error('Error al verificar el stock:', err);
-            errorOccurred = true;
-            return;
-          }
-
-          if (row.stock >= item.quantity) {
-            // Actualizar stock en inventario
-            db.run(
-              'UPDATE inventory SET stock = stock - ? WHERE id = ?',
-              [item.quantity, item.id],
-              (err) => {
-                if (err) {
-                  console.error('Error al actualizar el stock:', err);
-                  errorOccurred = true;
-                  return;
-                }
-              }
-            );
-
-            // Registrar la venta
-            db.run(
-              'INSERT INTO sales (product_id, quantity, sale_date) VALUES (?, ?, ?)',
-              [item.id, item.quantity, new Date().toISOString()],
-              (err) => {
-                if (err) {
-                  console.error('Error al registrar la venta:', err);
-                  errorOccurred = true;
-                  return;
-                }
-              }
-            );
-          } else {
-            alert(`No hay suficiente stock para vender ${item.quantity} unidades de ${item.description}.`);
-            errorOccurred = true;
-            return;
-          }
-        });
-      });
-
-      if (errorOccurred) {
-        db.run('ROLLBACK');
-        alert('Ocurrió un error al procesar la venta.');
-      } else {
-        db.run('COMMIT');
-        alert('Venta realizada exitosamente.');
-        cart = [];
-        updateCartUI();
-      }
-    });
+ // Función para confirmar la venta
+function confirmSale() {
+  if (cart.length === 0) {
+    alert('El carrito está vacío.');
+    return;
   }
+
+  // Iniciar una transacción
+  db.serialize(() => {
+    db.run('BEGIN TRANSACTION');
+
+    let errorOccurred = false;
+
+    cart.forEach((item) => {
+      const subtotal = item.price * item.quantity; // Calcular el subtotal
+
+      // Verificar stock nuevamente
+      db.get('SELECT stock FROM inventory WHERE id = ?', [item.id], (err, row) => {
+        if (err) {
+          console.error('Error al verificar el stock:', err);
+          errorOccurred = true;
+          return;
+        }
+
+        if (row.stock >= item.quantity) {
+          // Actualizar stock en inventario
+          db.run(
+            'UPDATE inventory SET stock = stock - ? WHERE id = ?',
+            [item.quantity, item.id],
+            (err) => {
+              if (err) {
+                console.error('Error al actualizar el stock:', err);
+                errorOccurred = true;
+                return;
+              }
+            }
+          );
+
+          // Registrar la venta con el subtotal
+          db.run(
+            'INSERT INTO sales (product_id, quantity, sale_date, subtotal) VALUES (?, ?, ?, ?)',
+            [item.id, item.quantity, new Date().toISOString(), subtotal],
+            (err) => {
+              if (err) {
+                console.error('Error al registrar la venta:', err);
+                errorOccurred = true;
+                return;
+              }
+            }
+          );
+        } else {
+          alert(`No hay suficiente stock para vender ${item.quantity} unidades de ${item.description}.`);
+          errorOccurred = true;
+          return;
+        }
+      });
+    });
+
+    if (errorOccurred) {
+      db.run('ROLLBACK');
+      alert('Ocurrió un error al procesar la venta.');
+    } else {
+      db.run('COMMIT');
+      alert('Venta realizada exitosamente.');
+      cart = [];
+      updateCartUI();
+    }
+  });
+}
+
 
   // Eventos
   searchBtn.addEventListener('click', searchProducts);

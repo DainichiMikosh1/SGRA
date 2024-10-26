@@ -8,7 +8,7 @@ window.addEventListener('DOMContentLoaded', () => {
     salesTableBody.innerHTML = '';
 
     db.all(
-      `SELECT inventory.description, sales.quantity, sales.sale_date
+      `SELECT inventory.description, sales.quantity, sales.sale_date, sales.subtotal
        FROM sales
        JOIN inventory ON sales.product_id = inventory.id`,
       [],
@@ -22,6 +22,7 @@ window.addEventListener('DOMContentLoaded', () => {
               <td>${row.description}</td>
               <td>${row.quantity}</td>
               <td>${new Date(row.sale_date).toLocaleString()}</td>
+              <td>${row.subtotal}</td>
             `;
             salesTableBody.appendChild(tr);
           });
