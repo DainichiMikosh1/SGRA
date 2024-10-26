@@ -29,7 +29,7 @@ window.addEventListener('DOMContentLoaded', () => {
               const div = document.createElement('div');
               div.classList.add('product-item');
               div.innerHTML = `
-                <span>${row.description} (Stock: ${row.stock}) - $${row.price}</span>
+                <span>${row.description} marca: ${row.model} (Stock: ${row.stock}) - $${row.price}</span>
                 <input type="number" min="1" max="${row.stock}" value="1" id="quantity-${row.id}">
                 <button data-id="${row.id}">Agregar al Carrito</button>
               `;
@@ -68,6 +68,7 @@ window.addEventListener('DOMContentLoaded', () => {
         cart.push({
           id: product.id,
           description: product.description,
+          model: product.model,
           price: product.price,
           quantity: quantity,
           stock: product.stock,
@@ -101,6 +102,7 @@ window.addEventListener('DOMContentLoaded', () => {
         <img src="${imageUrl}" alt="Imagen del Producto" style="max-width: 100px; height: auto;">
         </td>
         <td>${item.description}</td>
+        td>${item.model}</td>
         <td>$${item.price}</td>
         <td>${item.quantity}</td>
         <td>$${subtotal.toFixed(2)}</td>

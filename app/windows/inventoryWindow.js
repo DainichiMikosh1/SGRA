@@ -199,6 +199,7 @@ window.addEventListener('DOMContentLoaded', () => {
                     </td>
                     <td>
                         <button class="editBtn" data-id="${row.id}">Editar</button>
+                        <button class="deleteBtn" data-id="${row.id}">Eliminar</button>
                     </td>
                 `;
 
@@ -213,6 +214,29 @@ window.addEventListener('DOMContentLoaded', () => {
                     ipcRenderer.send('open-add-product-window', productId);
                 });
             });
+
+            const deleteButton = document.querySelectorAll('.deleteBtn');
+            deleteButton.forEach((button) => {
+                button.addEventListener('click', () => {
+                    const productId = button.getAttribute('data-id');
+                    deleteProduct(productId);
+                });
+            });
+
+            const deleteProduct = (productId) => {
+                const confirmResponse = confirm('¿Estás seguro de que deseas eliminar este producto?');
+
+                if (confirmResponse) {
+                    db.run('DELETE FROM inventory WHERE id = ?', [productId], (err) => {
+                        if (err) {
+                            console.error('Error al eliminar el producto:', err);
+                        } else {
+                            alert('Producto eliminado exitosamente.');
+                            loadInventory();
+                        }
+                    });
+                }
+            }
         }
     });
 }
