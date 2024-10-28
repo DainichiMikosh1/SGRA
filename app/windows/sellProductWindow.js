@@ -11,6 +11,11 @@ window.addEventListener('DOMContentLoaded', () => {
   const confirmSaleBtn = document.getElementById('confirmSaleBtn');
 
   let cart = []; // Array para almacenar los productos en el carrito
+  let loggedUserId = null; // ID del usuario logueado
+
+  ipcRenderer.on('set-logged-user-id', (event, userId) => {
+    loggedUserId = userId; // Guardar el ID del usuario
+  });
 
   // Función para buscar productos
   function searchProducts() {
@@ -122,22 +127,20 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 
  // Función para confirmar la venta
-function confirmSale() {
+ function confirmSale() {
   if (cart.length === 0) {
     alert('El carrito está vacío.');
     return;
   }
 
-  // Iniciar una transacción
   db.serialize(() => {
     db.run('BEGIN TRANSACTION');
 
     let errorOccurred = false;
 
     cart.forEach((item) => {
-      const subtotal = item.price * item.quantity; // Calcular el subtotal
+      const subtotal = item.price * item.quantity;
 
-      // Verificar stock nuevamente
       db.get('SELECT stock FROM inventory WHERE id = ?', [item.id], (err, row) => {
         if (err) {
           console.error('Error al verificar el stock:', err);
@@ -146,7 +149,6 @@ function confirmSale() {
         }
 
         if (row.stock >= item.quantity) {
-          // Actualizar stock en inventario
           db.run(
             'UPDATE inventory SET stock = stock - ? WHERE id = ?',
             [item.quantity, item.id],
@@ -159,10 +161,9 @@ function confirmSale() {
             }
           );
 
-          // Registrar la venta con el subtotal
           db.run(
-            'INSERT INTO sales (product_id, quantity, sale_date, subtotal) VALUES (?, ?, ?, ?)',
-            [item.id, item.quantity, new Date().toISOString(), subtotal],
+            'INSERT INTO sales (product_id, quantity, sale_date, subtotal, user_id) VALUES (?, ?, ?, ?, ?)',
+            [item.id, item.quantity, new Date().toISOString(), subtotal, loggedUserId],
             (err) => {
               if (err) {
                 console.error('Error al registrar la venta:', err);
@@ -190,8 +191,6 @@ function confirmSale() {
     }
   });
 }
-
-
   // Eventos
   searchBtn.addEventListener('click', searchProducts);
   confirmSaleBtn.addEventListener('click', confirmSale);

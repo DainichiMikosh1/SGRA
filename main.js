@@ -7,7 +7,8 @@ const db = require(path.join(__dirname, 'database.js'));
 let loginWindow;
 let mainWindow;
 
-ipcMain.on('login-success', () => {
+ipcMain.on('login-success', (event, userId) => {
+  loggedUserId = userId; // Guardar el ID del usuario
   if (loginWindow) {
     loginWindow.close();
   }
@@ -132,15 +133,15 @@ function createSalesWindow() {
   const salesWindow = new BrowserWindow({
     width: 800,
     height: 600,
-    parent: mainWindow, // Opcional: establece la ventana principal como padre
+    parent: mainWindow,
     webPreferences: {
       preload: path.join(__dirname, 'app', 'windows', 'salesWindow.js'),
       nodeIntegration: true,
       contextIsolation: false,
     },
-}); 
-  salesWindow.maximize(); 
+  });
 
+  salesWindow.maximize();
   salesWindow.loadFile(path.join(__dirname, 'app', 'sales.html'));
 }
 
@@ -190,6 +191,10 @@ function createSellProductWindow() {
   sellProductWindow.maximize();
 
   sellProductWindow.loadFile(path.join(__dirname, 'app', 'sellProduct.html'));
+
+  sellProductWindow.webContents.once('did-finish-load', () => {
+    sellProductWindow.webContents.send('set-logged-user-id', loggedUserId);
+  });
 }
 
 // Evento que se dispara cuando Electron ha finalizado la inicialización.

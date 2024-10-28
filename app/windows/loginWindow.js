@@ -30,15 +30,13 @@ window.addEventListener('DOMContentLoaded', () => {
             console.error('Error al comparar las contraseñas:', err);
             errorMessage.textContent = 'Error al iniciar sesión. Intente nuevamente.';
           } else if (result) {
-            // Autenticación exitosa
-            ipcRenderer.send('login-success');
+            // Enviar el ID del usuario al proceso principal
+            ipcRenderer.send('login-success', user.id);
           } else {
-            // Contraseña incorrecta
             errorMessage.textContent = 'Usuario o contraseña incorrectos.';
           }
         });
       } else {
-        // Usuario no encontrado
         errorMessage.textContent = 'Usuario o contraseña incorrectos.';
       }
     });

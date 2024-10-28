@@ -68,7 +68,9 @@ db.serialize(() => {
         quantity INTEGER,
         sale_date TEXT,
         subtotal REAL,
-        FOREIGN KEY(product_id) REFERENCES inventory(id)
+        user_id INTEGER,
+        FOREIGN KEY(product_id) REFERENCES inventory(id),
+        FOREIGN KEY(user_id) REFERENCES users(id)
       )
     `);
   

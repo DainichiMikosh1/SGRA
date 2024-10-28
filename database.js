@@ -63,15 +63,17 @@ db.serialize(() => {
     // Tabla de ventas
     db.run(`
       CREATE TABLE IF NOT EXISTS sales (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        product_id INTEGER,
-        quantity INTEGER,
-        sale_date TEXT,
-        subtotal REAL,
-        FOREIGN KEY(product_id) REFERENCES inventory(id)
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          product_id INTEGER,
+          quantity INTEGER,
+          sale_date TEXT,
+          subtotal REAL,
+          user_id INTEGER,
+          FOREIGN KEY(product_id) REFERENCES inventory(id),
+          FOREIGN KEY(user_id) REFERENCES users(id)
       )
     `);
-  
+      
     // Tabla de pedidos
     db.run(`
       CREATE TABLE IF NOT EXISTS orders (
