@@ -81,3 +81,9 @@ button:hover {
   color: #e74c3c;
   font-size: 14px;
 }
+
+.success-message {
+  margin-top: 15px;
+  color: #2ecc71;
+  font-size: 14px;
+}

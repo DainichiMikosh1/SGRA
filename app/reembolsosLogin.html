@@ -1,0 +1,78 @@
+<!-- login.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Procesar Reembolso</title>
+  <link rel="stylesheet" href="styles/login.css">
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+    #login-form {
+      display: flex;
+      flex-direction: column;
+      width: 300px;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: #f9f9f9;
+    }
+    input {
+      margin-bottom: 10px;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      padding: 10px;
+      font-size: 16px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+    .error {
+      color: red;
+      margin-top: 10px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="login-form">
+    <h2>Autorización</h2>
+    <input type="text" id="username" placeholder="Usuario" />
+    <input type="password" id="password" placeholder="Contraseña" />
+    <button id="loginBtn">Ingresar</button>
+    <p id="error-message" class="error">Usuario o contraseña incorrectos</p>
+  </div>
+
+  <script>
+    document.getElementById('loginBtn').addEventListener('click', function() {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      // Validación de usuario y contraseña
+      if (username === 'admin' && password === 'admin123') {
+        // Redirigir a la página de reembolsos
+        window.location.href = 'reembolsos.html';
+      } else {
+        // Mostrar mensaje de error
+        document.getElementById('error-message').style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>

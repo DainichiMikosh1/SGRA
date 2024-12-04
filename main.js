@@ -1,5 +1,3 @@
-// main.js
-
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const db = require(path.join(__dirname, 'database.js'));
@@ -50,6 +48,25 @@ ipcMain.on('open-sell-product-window', () => {
 
 ipcMain.on('open-register-order-window', () => {
   createRegisterOrderWindow();
+});
+
+function createRegisterWindow() {
+  const registerWindow = new BrowserWindow({
+    width: 400,
+    height: 600,
+    webPreferences: {
+      preload: path.join(__dirname, 'app', 'windows', 'registerWindow.js'),
+      nodeIntegration: true,
+      contextIsolation: false,
+    },
+  });
+
+  registerWindow.loadFile(path.join(__dirname, 'app', 'register.html'));
+}
+
+// Evento para abrir la ventana de registro
+ipcMain.on('open-register-window', () => {
+  createRegisterWindow();
 });
 
 function createLoginWindow() {

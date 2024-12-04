@@ -1,5 +1,3 @@
-// app/database.js
-
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 const fs = require('fs');
@@ -10,8 +8,10 @@ if (!fs.existsSync(dataDir)) {
   fs.mkdirSync(dataDir);
 }
 
+//APP FINAL
 //const dbPath = path.join(process.resourcesPath, 'app', 'data', 'database.db');
 //CAMBIAR UBICACION DE LA BASE DE DATOS
+//APP DESARROLLO
 const dbPath = path.join(__dirname, 'app', 'data', 'database.db');
 
 // Abre la conexión a la base de datos
@@ -92,14 +92,15 @@ db.serialize(() => {
       CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT NOT NULL UNIQUE,
-        password_hash TEXT NOT NULL
+        password_hash TEXT NOT NULL,
+        email TEXT NOT NULL
       );
     `);
 
     db.run(`
       CREATE TABLE IF NOT EXISTS reembolsos (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        sale_id INTEGER,
+        sale_id INTEGER, 
         product_id INTEGER,
         quantity INTEGER,
         refund_date TEXT,
