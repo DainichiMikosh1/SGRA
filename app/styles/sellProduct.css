@@ -189,8 +189,8 @@ main#sell-product-section {
   font-weight: 700;
 }
 
-/* Botón de Confirmar Venta */
-#confirmSaleBtn {
+/* Botón de pasar a pagar */
+#goToPaymentBtn {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -204,19 +204,19 @@ main#sell-product-section {
   transition: background-color 0.3s, transform 0.3s;
 }
 
-#confirmSaleBtn img {
+#goToPaymentBtn img {
   width: 20px;
   height: 20px;
   margin-right: 10px;
   transition: transform 0.3s;
 }
 
-#confirmSaleBtn:hover {
+#goToPaymentBtn:hover {
   background-color: #218838;
   transform: translateY(-2px);
 }
 
-#confirmSaleBtn:hover img {
+#goToPaymentBtn:hover img {
   transform: scale(1.1);
 }
 
@@ -322,7 +322,7 @@ main#sell-product-section {
   }
 
   #confirmSaleBtn img {
-    width: 16px;
+    width: 16px;  
     height: 16px;
   }
 }

@@ -222,7 +222,7 @@ main#refunds-section {
 .buttons-container button {
   display: flex;
   align-items: center;
-  background-color: #28a745;
+  background-color: #5750d3;
   color: #ffffff;
   border: none;
   border-radius: 8px;
@@ -240,7 +240,7 @@ main#refunds-section {
 }
 
 .buttons-container button:hover {
-  background-color: #218838;
+  background-color: #5750d3;
   transform: translateY(-2px);
 }
 

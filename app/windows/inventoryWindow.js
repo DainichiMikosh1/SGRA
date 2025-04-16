@@ -1,10 +1,13 @@
-// app/windows/inventoryWindow.js
-
 const { ipcRenderer } = require('electron');
 const path = require('path');
 const db = require(path.join(__dirname, '.', '..', 'database.js'));
 const fs = require('fs');
 const Chart = require('chart.js/auto'); // Importar Chart.js
+const nodemailer = require('nodemailer');
+const PDFDocument = require('pdfkit');
+
+// Variable global:
+let chart;
 
 window.addEventListener('DOMContentLoaded', () => {
   const inventoryTableBody = document.querySelector('#inventoryTable tbody');
@@ -26,6 +29,7 @@ window.addEventListener('DOMContentLoaded', () => {
     topProductsSection.style.display = 'block';
     loadYears(); // Cargar los años disponibles
     loadTopProducts(); // Cargar los datos al abrir la sección
+
   });
 
   function loadYears() {
@@ -110,28 +114,16 @@ window.addEventListener('DOMContentLoaded', () => {
   let chart; // Variable global para almacenar la instancia de la gráfica
 
   function updateChart(data) {
+    if (chart) chart.destroy();
+  
     const ctx = topProductsChart.getContext('2d');
-  
-    // Si no hay datos, limpiar la gráfica
-    if (data.length === 0) {
-      if (chart) {
-        chart.destroy();
-      }
-      return;
-    }
-  
     const labels = data.map((row) => row.description);
     const quantities = data.map((row) => row.total_sold);
-  
-    // Si la gráfica ya existe, destruirla para crear una nueva
-    if (chart) {
-      chart.destroy();
-    }
   
     chart = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: labels,
+        labels,
         datasets: [{
           label: 'Unidades Vendidas',
           data: quantities,
@@ -142,11 +134,17 @@ window.addEventListener('DOMContentLoaded', () => {
       },
       options: {
         responsive: true,
-        scales: {
-          y: {
-            beginAtZero: true,
-            precision: 0
+        animation: {
+          onComplete: function() {
+            // Aquí sí o sí ya se dibujó la gráfica
+            const now = new Date();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const year = now.getFullYear();
+            sendMonthlyReport(month, year);
           }
+        },
+        scales: {
+          y: { beginAtZero: true }
         }
       }
     });
@@ -355,4 +353,84 @@ window.addEventListener('DOMContentLoaded', () => {
   ipcRenderer.on('refresh-inventory', () => {
     loadInventory();
   });
+
+   // Función para capturar la gráfica como imagen
+   function captureChartImage() {
+    if (!chart) {
+      console.error("No existe la instancia de la gráfica");
+      return null;
+    }
+    // Retorna un dataURL (e.g. "data:image/png;base64,iVBOR...")
+    return chart.toBase64Image();
+  }  
+
+   // Función para generar el PDF
+   async function generatePDF(month, year) {
+    const pdfPath = path.join(process.resourcesPath, 'app', 'data', `Reporte_${month}_${year}.pdf`);
+    const doc = new PDFDocument();
+    const stream = fs.createWriteStream(pdfPath);
+  
+    doc.pipe(stream);
+    doc.fontSize(18).text('Reporte de Productos Más Vendidos', { align: 'center' });
+    doc.fontSize(14).text(`Mes: ${month}, Año: ${year}\n\n`, { align: 'center' });
+  
+    // Capturamos la gráfica en base64
+    const chartImage = captureChartImage();
+    if (!chartImage) {
+      console.error('No se pudo capturar la gráfica.');
+      doc.end();
+      return;
+    }
+  
+    // Quitar el prefijo data:image/png;base64,
+    const base64Data = chartImage.replace(/^data:image\/\w+;base64,/, '');
+    // Convertir a Buffer
+    const buffer = Buffer.from(base64Data, 'base64');
+  
+    // Insertar la imagen al PDF (usa sólo el buffer)
+    doc.image(buffer, {
+      fit: [500, 300],
+      align: 'center',
+      valign: 'center'
+    });
+  
+    doc.end();
+  
+    return new Promise((resolve) => {
+      stream.on('finish', () => resolve(pdfPath));
+    });
+  }  
+
+  // Función para enviar el correo
+  async function sendMonthlyReport(month, year) {
+    const pdfPath = await generatePDF(month, year);
+  
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'alvaradomando22@gmail.com',
+        pass: 'zghf qhwk lbjf lrwp'
+      }
+    });
+  
+    const mailOptions = {
+      from: 'alvaradomando22@gmail.com',
+      to: 'juandiegotorreslopez61@gmail.com',
+      subject: `Reporte Mensual - ${month}/${year}`,
+      text: `Adjunto el reporte del mes ${month} del año ${year}.`,
+      attachments: [
+        {
+          filename: `Reporte_${month}_${year}.pdf`,
+          path: pdfPath
+        }
+      ]
+    };
+  
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        return console.error('Error al enviar el correo:', error);
+      }
+      console.log('Correo enviado:', info.response);
+    });
+  }  
 });

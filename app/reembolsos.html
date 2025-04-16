@@ -1,5 +1,3 @@
-<!-- app/refunds.html -->
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -48,17 +46,21 @@
       <h2>Detalle de la Venta ID: <span id="selectedSaleId"></span></h2>
       <p>Producto: <span id="selectedProductDescription"></span></p>
       <p>Cantidad Vendida: <span id="selectedQuantity"></span></p>
-      
+
       <label for="refundQuantity">Cantidad a Reembolsar:</label>
       <input type="number" id="refundQuantity" min="1">
-      
+
       <label for="reason">Razón del Reembolso:</label>
       <textarea id="reason" rows="4"></textarea>
-      
+
       <div class="buttons-container">
         <button id="processRefundBtn">
           <img src="images/confirm.png" alt="Procesar">
           Procesar Reembolso
+        </button>
+        <button id="processRefundWithTicketBtn">
+          <img src="images/confirm.png" alt="Procesar con Ticket">
+          Procesar con Ticket
         </button>
         <button id="backToSalesBtn">
           <img src="images/back.png" alt="Volver">
@@ -83,6 +85,7 @@
         </thead>
         <tbody>
           <!-- Aquí se cargarán los reembolsos -->
+        </tbody>
       </table>
     </section>
   </main>

@@ -4,6 +4,9 @@ const db = require(path.join(__dirname, 'database.js'));
 
 let loginWindow;
 let mainWindow;
+let cajaWin;
+let ticketWin;
+let loggedUserId; // Asegúrate de tener esta variable global si se necesita para ventas
 
 ipcMain.on('login-success', (event, userId) => {
   loggedUserId = userId; // Guardar el ID del usuario
@@ -49,6 +52,112 @@ ipcMain.on('open-sell-product-window', () => {
 ipcMain.on('open-register-order-window', () => {
   createRegisterOrderWindow();
 });
+
+// Abrir caja para el pago
+ipcMain.on('open-payment-window', (event, { cart, total, userId }) => {
+  createCajaWindow(cart, total, userId);
+});
+
+// Finalizar venta: actualizar BD y crear ticket
+ipcMain.on('finalize-sale', (event, data) => {
+  const { cart, total, received, userId } = data;
+
+  db.serialize(() => {
+    db.run('BEGIN TRANSACTION');
+    let errorOccurred = false;
+
+    // Función para finalizar la transacción tras procesar todos los productos
+    const finalizeTransaction = () => {
+      if (errorOccurred) {
+        db.run('ROLLBACK');
+        cajaWin && cajaWin.webContents.send('error-sale', { message: 'Ocurrió un error al procesar la venta.' });
+      } else {
+        db.run('COMMIT');
+        // Crear ticket
+        createTicketWindow({ cart, total, received });
+        if (cajaWin) {
+          cajaWin.close();
+          cajaWin = null;
+        }
+      }
+    };
+
+    let pending = cart.length; // Contador de productos pendientes
+
+    cart.forEach((item) => {
+      const subtotal = item.price * item.quantity;
+
+      db.get('SELECT stock FROM inventory WHERE id = ?', [item.id], (err, row) => {
+        if (err) {
+          console.error('Error al verificar el stock:', err);
+          errorOccurred = true;
+          pending--;
+          if (pending === 0) finalizeTransaction();
+          return;
+        }
+
+        if (row && row.stock >= item.quantity) {
+          db.run('UPDATE inventory SET stock = stock - ? WHERE id = ?', [item.quantity, item.id], (err) => {
+            if (err) {
+              console.error('Error al actualizar el stock:', err);
+              errorOccurred = true;
+              pending--;
+              if (pending === 0) finalizeTransaction();
+              return;
+            }
+
+            db.run('INSERT INTO sales (product_id, quantity, sale_date, subtotal, user_id) VALUES (?, ?, ?, ?, ?)',
+              [item.id, item.quantity, new Date().toISOString(), subtotal, userId],
+              (err) => {
+                if (err) {
+                  console.error('Error al registrar la venta:', err);
+                  errorOccurred = true;
+                }
+                pending--;
+                if (pending === 0) finalizeTransaction();
+              }
+            );
+          });
+        } else {
+          console.error(`No hay suficiente stock para vender ${item.quantity} unidades de ${item.description}.`);
+          errorOccurred = true;
+          pending--;
+          if (pending === 0) finalizeTransaction();
+        }
+      });
+    });
+  });
+});
+
+function createCajaWindow(cart, total, userId) {
+  cajaWin = new BrowserWindow({
+    width: 400,
+    height: 500,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false
+    }
+  });
+  cajaWin.loadURL(`file://${path.join(__dirname, 'app', 'cajaWindow.html')}`);
+  cajaWin.webContents.on('did-finish-load', () => {
+    cajaWin.webContents.send('payment-data', { cart, total, userId });
+  });
+}
+
+function createTicketWindow(data) {
+  ticketWin = new BrowserWindow({
+    width: 350,
+    height: 600,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false
+    }
+  });
+  ticketWin.loadURL(`file://${path.join(__dirname, 'app', 'ticket.html')}`);
+  ticketWin.webContents.on('did-finish-load', () => {
+    ticketWin.webContents.send('sale-data', data);
+  });
+}
 
 function createRegisterWindow() {
   const registerWindow = new BrowserWindow({
@@ -118,7 +227,6 @@ function createInventoryWindow() {
     },
   });
   inventoryWindow.maximize();
-
   inventoryWindow.loadFile(path.join(__dirname, 'app', 'inventory.html'));
 }
 
@@ -166,7 +274,7 @@ function createOrderHistoryWindow() {
   const orderHistoryWindow = new BrowserWindow({
     width: 800,
     height: 600,
-    parent: mainWindow, // Opcional
+    parent: mainWindow,
     webPreferences: {
       preload: path.join(__dirname, 'app', 'windows', 'orderHistoryWindow.js'),
       nodeIntegration: true,
@@ -174,7 +282,6 @@ function createOrderHistoryWindow() {
     },
   });
   orderHistoryWindow.maximize();
-
   orderHistoryWindow.loadFile(path.join(__dirname, 'app', 'orderHistory.html'));
 }
 
@@ -182,7 +289,7 @@ function createLowStockWindow() {
   const lowStockWindow = new BrowserWindow({
     width: 600,
     height: 400,
-    parent: mainWindow, // Opcional
+    parent: mainWindow,
     webPreferences: {
       preload: path.join(__dirname, 'app', 'windows', 'lowStockNotificationsWindow.js'),
       nodeIntegration: true,
@@ -190,7 +297,6 @@ function createLowStockWindow() {
     },
   });
   lowStockWindow.maximize();
-
   lowStockWindow.loadFile(path.join(__dirname, 'app', 'lowStockNotifications.html'));
 }
 
@@ -198,7 +304,7 @@ function createSellProductWindow() {
   const sellProductWindow = new BrowserWindow({
     width: 800,
     height: 700,
-    parent: mainWindow, // Opcional
+    parent: mainWindow,
     webPreferences: {
       preload: path.join(__dirname, 'app', 'windows', 'sellProductWindow.js'),
       nodeIntegration: true,
@@ -206,7 +312,6 @@ function createSellProductWindow() {
     },
   });
   sellProductWindow.maximize();
-
   sellProductWindow.loadFile(path.join(__dirname, 'app', 'sellProduct.html'));
 
   sellProductWindow.webContents.once('did-finish-load', () => {
@@ -226,7 +331,7 @@ function createRegisterOrderWindow() {
   const registerOrderWindow = new BrowserWindow({
     width: 800,
     height: 600,
-    parent: mainWindow, // Opcional
+    parent: mainWindow,
     webPreferences: {
       preload: path.join(__dirname, 'app', 'windows', 'registerOrderWindow.js'),
       nodeIntegration: true,
@@ -234,7 +339,6 @@ function createRegisterOrderWindow() {
     },
   });
   registerOrderWindow.maximize();
-
   registerOrderWindow.loadFile(path.join(__dirname, 'app', 'registerOrder.html'));
 }
 
@@ -248,20 +352,17 @@ function createRefundsWindow() {
     },
   });
   refundsWindow.maximize();
-
   refundsWindow.loadFile('app/reembolsos.html');
 
-  // Manejar el evento de cierre si es necesario
   refundsWindow.on('closed', () => {
     refundsWindow = null;
   });
 }
 
-ipcMain.on('process-refund', (event, refundData) => {
+ipcMain.on('process-refund-with-ticket', (event, refundData) => {
   const { saleId, productId, quantity, reason } = refundData;
 
   db.serialize(() => {
-    // Insertar el reembolso en la tabla reembolsos
     db.run(
       `INSERT INTO reembolsos (sale_id, product_id, quantity, refund_date, reason)
        VALUES (?, ?, ?, ?, ?)`,
@@ -273,33 +374,31 @@ ipcMain.on('process-refund', (event, refundData) => {
           return;
         }
 
-        // Actualizar el inventario sumando la cantidad reembolsada
+        const refundId = this.lastID;
         db.run(
           `UPDATE inventory SET stock = stock + ? WHERE id = ?`,
           [quantity, productId],
-          function (err) {
+          (err) => {
             if (err) {
               console.error('Error al actualizar el inventario:', err);
               event.sender.send('refund-processed', { success: false, message: 'Error al actualizar el inventario.' });
               return;
             }
 
-            // Actualizar la cantidad vendida en sales restando la cantidad reembolsada
             db.run(
               `UPDATE sales SET quantity = quantity - ? WHERE id = ?`,
               [quantity, saleId],
-              function (err) {
+              (err) => {
                 if (err) {
                   console.error('Error al actualizar la venta:', err);
                   event.sender.send('refund-processed', { success: false, message: 'Error al actualizar la venta.' });
                   return;
                 }
 
-                // Verificar si la cantidad vendida es cero y eliminar el registro si es necesario
                 db.get(
                   `SELECT quantity FROM sales WHERE id = ?`,
                   [saleId],
-                  function (err, row) {
+                  (err, row) => {
                     if (err) {
                       console.error('Error al verificar la cantidad vendida:', err);
                       event.sender.send('refund-processed', { success: false, message: 'Error al verificar la cantidad vendida.' });
@@ -310,7 +409,7 @@ ipcMain.on('process-refund', (event, refundData) => {
                       db.run(
                         `DELETE FROM sales WHERE id = ?`,
                         [saleId],
-                        function (err) {
+                        (err) => {
                           if (err) {
                             console.error('Error al eliminar la venta:', err);
                             event.sender.send('refund-processed', { success: false, message: 'Error al eliminar la venta.' });
@@ -320,8 +419,24 @@ ipcMain.on('process-refund', (event, refundData) => {
                         }
                       );
                     }
-                    console.log('Reembolso procesado exitosamente.');
-                    event.sender.send('refund-processed', { success: true, message: 'Reembolso procesado exitosamente.' });
+
+                    console.log('Reembolso procesado exitosamente con ticket.');
+
+                    // Obtener datos del reembolso para el ticket
+                    db.get(`
+                      SELECT reembolsos.id, reembolsos.sale_id, reembolsos.quantity, reembolsos.refund_date, reembolsos.reason, inventory.description
+                      FROM reembolsos
+                      JOIN inventory ON reembolsos.product_id = inventory.id
+                      WHERE reembolsos.id = ?
+                    `, [refundId], (err, refundRow) => {
+                      if (err) {
+                        console.error('Error al obtener datos de reembolso:', err);
+                        event.sender.send('refund-processed', { success: true, message: 'Reembolso procesado, pero error en ticket.' });
+                        return;
+                      }
+                      event.sender.send('refund-processed', { success: true, message: 'Reembolso procesado con ticket.' });
+                      createRefundTicketWindow(refundRow);
+                    });
                   }
                 );
               }
@@ -332,3 +447,18 @@ ipcMain.on('process-refund', (event, refundData) => {
     );
   });
 });
+
+function createRefundTicketWindow(refundData) {
+  const refundTicketWin = new BrowserWindow({
+    width: 350,
+    height: 600,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false
+    }
+  });
+  refundTicketWin.loadURL(`file://${path.join(__dirname, 'app', 'refundTicket.html')}`);
+  refundTicketWin.webContents.on('did-finish-load', () => {
+    refundTicketWin.webContents.send('refund-data', { refund: refundData });
+  });
+}

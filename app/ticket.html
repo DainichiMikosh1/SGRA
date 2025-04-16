@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Ticket de Venta</title>
+<link rel="stylesheet" href="styles/ticket.css">
+</head>
+<body>
+  <div class="ticket">
+    <h1>ACCESORIOS ALVARADO</h1>
+    <p>Republica #272-B, Col. Jardines de catedral</p>
+    <p>Tel: (351) 517-82-44</p>
+    <hr>
+    <h2>Ticket de Venta</h2>
+    <div id="sale-info"></div>
+    <hr>
+    <div class="totals">
+      <p>Total: <span id="total"></span></p>
+      <p>Efectivo: <span id="efectivo"></span></p>
+      <p>Cambio: <span id="cambio"></span></p>
+    </div>
+    <hr>
+    <p class="footer">¡Gracias por su compra!</p>
+  </div>
+
+  <script>
+    const { ipcRenderer } = require('electron');
+    const saleInfoDiv = document.getElementById('sale-info');
+    const totalSpan = document.getElementById('total');
+    const efectivoSpan = document.getElementById('efectivo');
+    const cambioSpan = document.getElementById('cambio');
+
+    ipcRenderer.on('sale-data', (event, data) => {
+      const { cart, total, received } = data;
+      let html = '<table><tr><th>Producto</th><th>Cant</th><th>Precio</th><th>Subtotal</th></tr>';
+      cart.forEach(item => {
+        const subtotal = (item.price * item.quantity).toFixed(2);
+        html += `<tr>
+          <td>${item.description}</td>
+          <td>${item.quantity}</td>
+          <td>$${item.price.toFixed(2)}</td>
+          <td>$${subtotal}</td>
+        </tr>`;
+      });
+      html += '</table>';
+      saleInfoDiv.innerHTML = html;
+
+      totalSpan.textContent = `$${total.toFixed(2)}`;
+      efectivoSpan.textContent = `$${received.toFixed(2)}`;
+      cambioSpan.textContent = `$${(received - total).toFixed(2)}`;
+
+      // Opcional: imprimir automáticamente al cargar
+      window.print();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Ticket de Reembolso</title>
+  <link rel="stylesheet" href="styles/refundTicket.css">
+</head>
+<body>
+  <div class="ticket">
+    <h1>ACCESORIOS ALVARADO</h1>
+    <p>Republica #272-B, Col. Jardines de catedral</p>
+    <p>Tel: (351) 517-82-44</p>
+    <hr>
+    <h2>Ticket de Reembolso</h2>
+    <div id="refund-info"></div>
+    <hr>
+    <p class="footer">¡Gracias por su preferencia!</p>
+  </div>
+
+  <script>
+    const { ipcRenderer } = require('electron');
+    const refundInfoDiv = document.getElementById('refund-info');
+
+    ipcRenderer.on('refund-data', (event, data) => {
+      const { refund } = data;
+      let html = `
+        <p><strong>ID Reembolso:</strong> ${refund.id}</p>
+        <p><strong>ID Venta Original:</strong> ${refund.sale_id}</p>
+        <p><strong>Producto:</strong> ${refund.description}</p>
+        <p><strong>Cantidad Reembolsada:</strong> ${refund.quantity}</p>
+        <p><strong>Fecha:</strong> ${new Date(refund.refund_date).toLocaleString()}</p>
+        <p><strong>Razón:</strong> ${refund.reason}</p>
+      `;
+      refundInfoDiv.innerHTML = html;
+
+      // Imprimir automáticamente
+      window.print();
+    });
+  </script>
+</body>
+</html>

@@ -1,18 +1,208 @@
 [
-    {
-      "serial_number": "ABC123",
-      "price": 100.0,
-      "availability": true
-    },
-    {
-      "serial_number": "DEF456",
-      "price": 150.0,
-      "availability": false
-    },
-    {
-      "serial_number": "GHI789",
-      "price": 200.0,
-      "availability": true
-    }
-  ]
-  
+  {
+    "serial_number": "SNM001",
+    "price": 1100.0,
+    "availability": true
+  },
+  {
+    "serial_number": "SNM002",
+    "price": 1400.0,
+    "availability": true
+  },
+  {
+    "serial_number": "SNAF001",
+    "price": 170.0,
+    "availability": true
+  },
+  {
+    "serial_number": "SNAF002",
+    "price": 22.5,
+    "availability": true
+  },
+  {
+    "serial_number": "SNR001",
+    "price": 85.0,
+    "availability": true
+  },
+  {
+    "serial_number": "SNR002",
+    "price": 60.0,
+    "availability": true
+  },
+  {
+    "serial_number": "SNE001",
+    "price": 190.0,
+    "availability": true
+  },
+  {
+    "serial_number": "SNT001",
+    "price": 750.0,
+    "availability": true
+  },
+  {
+    "serial_number": "SNS001",
+    "price": 70.0,
+    "availability": true
+  },
+  {
+    "serial_number": "SND001",
+    "price": 110.0,
+    "availability": true
+  },
+  {
+    "serial_number": "SNM003",
+    "price": 1235.0,
+    "availability": true
+  },
+  {
+    "serial_number": "SNM004",
+    "price": 1475.0,
+    "availability": false
+  },
+  {
+    "serial_number": "SNAF003",
+    "price": 190.0,
+    "availability": true
+  },
+  {
+    "serial_number": "SNAF004",
+    "price": 28.0,
+    "availability": false
+  },
+  {
+    "serial_number": "SNR003",
+    "price": 42.5,
+    "availability": true
+  },
+  {
+    "serial_number": "SNR004",
+    "price": 14.0,
+    "availability": true
+  },
+  {
+    "serial_number": "SNE002",
+    "price": 215.0,
+    "availability": false
+  },
+  {
+    "serial_number": "SNT002",
+    "price": 380.0,
+    "availability": true
+  },
+  {
+    "serial_number": "SNS002",
+    "price": 110.0,
+    "availability": false
+  },
+  {
+    "serial_number": "SND002",
+    "price": 230.0,
+    "availability": true
+  },
+  {
+    "serial_number": "SNM005",
+    "price": 1050.0,
+    "availability": true
+  },
+  {
+    "serial_number": "SNM006",
+    "price": 1100.0,
+    "availability": false
+  },
+  {
+    "serial_number": "SNM007",
+    "price": 1500.0,
+    "availability": true
+  },
+  {
+    "serial_number": "SNM008",
+    "price": 1250.0,
+    "availability": false
+  },
+
+  {
+    "serial_number": "SNAF005",
+    "price": 180.0,
+    "availability": true
+  },
+  {
+    "serial_number": "SNAF006",
+    "price": 240.0,
+    "availability": false
+  },
+  {
+    "serial_number": "SNAF007",
+    "price": 28.0,
+    "availability": true
+  },
+
+  {
+    "serial_number": "SNR005",
+    "price": 85.0,
+    "availability": false
+  },
+  {
+    "serial_number": "SNR006",
+    "price": 23.0,
+    "availability": true
+  },
+  {
+    "serial_number": "SNR007",
+    "price": 65.0,
+    "availability": false
+  },
+
+  {
+    "serial_number": "SNE003",
+    "price": 170.0,
+    "availability": true
+  },
+  {
+    "serial_number": "SNE004",
+    "price": 210.0,
+    "availability": false
+  },
+  {
+    "serial_number": "SNE005",
+    "price": 190.0,
+    "availability": true
+  },
+
+  {
+    "serial_number": "SNT003",
+    "price": 430.0,
+    "availability": false
+  },
+  {
+    "serial_number": "SNT004",
+    "price": 480.0,
+    "availability": true
+  },
+  {
+    "serial_number": "SNT005",
+    "price": 580.0,
+    "availability": false
+  },
+
+  {
+    "serial_number": "SNS003",
+    "price": 75.0,
+    "availability": true
+  },
+  {
+    "serial_number": "SNS004",
+    "price": 95.0,
+    "availability": false
+  },
+
+  {
+    "serial_number": "SND003",
+    "price": 140.0,
+    "availability": true
+  },
+  {
+    "serial_number": "SND004",
+    "price": 210.0,
+    "availability": false
+  }
+]

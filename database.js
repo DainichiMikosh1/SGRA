@@ -9,10 +9,10 @@ if (!fs.existsSync(dataDir)) {
 }
 
 //APP FINAL
-//const dbPath = path.join(process.resourcesPath, 'app', 'data', 'database.db');
+const dbPath = path.join(process.resourcesPath, 'app', 'data', 'database.db');
 //CAMBIAR UBICACION DE LA BASE DE DATOS
 //APP DESARROLLO
-const dbPath = path.join(__dirname, 'app', 'data', 'database.db');
+//const dbPath = path.join(__dirname, 'app', 'data', 'database.db');
 
 // Abre la conexión a la base de datos
 const db = new sqlite3.Database(dbPath, (err) => {
@@ -97,6 +97,7 @@ db.serialize(() => {
       );
     `);
 
+    //tabla de reembolsos
     db.run(`
       CREATE TABLE IF NOT EXISTS reembolsos (
         id INTEGER PRIMARY KEY AUTOINCREMENT,

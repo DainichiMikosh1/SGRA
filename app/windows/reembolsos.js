@@ -1,11 +1,8 @@
-// app/windows/refundsWindow.js
-
 const { ipcRenderer } = require('electron');
 const db = require('../database');
 const path = require('path');
 
 window.addEventListener('DOMContentLoaded', () => {
-  // Elementos del DOM
   const searchSalesInput = document.getElementById('searchSalesInput');
   const salesTableBody = document.querySelector('#salesTable tbody');
   const saleDetailsSection = document.getElementById('sale-details-section');
@@ -15,13 +12,12 @@ window.addEventListener('DOMContentLoaded', () => {
   const refundQuantityInput = document.getElementById('refundQuantity');
   const reasonTextarea = document.getElementById('reason');
   const processRefundBtn = document.getElementById('processRefundBtn');
+  const processRefundWithTicketBtn = document.getElementById('processRefundWithTicketBtn');
   const backToSalesBtn = document.getElementById('backToSalesBtn');
   const refundsTableBody = document.querySelector('#refundsTable tbody');
 
-  // Variables globales
   let selectedSale = null;
 
-  // Función para cargar el historial de ventas
   function loadSalesHistory(searchTerm = '') {
     salesTableBody.innerHTML = '';
     let query = `
@@ -36,7 +32,7 @@ window.addEventListener('DOMContentLoaded', () => {
       params = [`%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`];
     }
 
-    query += 'ORDER BY sales.sale_date DESC';
+    query += ' ORDER BY sales.sale_date DESC';
 
     db.all(query, params, (err, rows) => {
       if (err) {
@@ -61,7 +57,6 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Función para mostrar los detalles de la venta seleccionada
   function showSaleDetails(sale) {
     selectedSaleIdSpan.textContent = sale.id;
     selectedProductDescription.textContent = sale.description;
@@ -73,7 +68,6 @@ window.addEventListener('DOMContentLoaded', () => {
     saleDetailsSection.style.display = 'block';
   }
 
-  // Función para cargar el historial de reembolsos
   function loadRefundsHistory() {
     refundsTableBody.innerHTML = '';
 
@@ -104,7 +98,6 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Eventos
   searchSalesInput.addEventListener('input', () => {
     const searchTerm = searchSalesInput.value.trim();
     loadSalesHistory(searchTerm);
@@ -115,12 +108,10 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('sales-history-section').style.display = 'block';
   });
 
-  // Inicializar
   loadSalesHistory();
   loadRefundsHistory();
 
-  // Procesar reembolso
-  processRefundBtn.addEventListener('click', () => {
+  function processRefund(withTicket = false) {
     const quantityToRefund = parseInt(refundQuantityInput.value);
     const maxQuantity = parseInt(selectedSale.quantity);
 
@@ -135,7 +126,6 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     const reason = reasonTextarea.value.trim();
-
     const refundData = {
       saleId: selectedSale.id,
       productId: selectedSale.product_id,
@@ -143,14 +133,24 @@ window.addEventListener('DOMContentLoaded', () => {
       reason: reason,
     };
 
-    ipcRenderer.send('process-refund', refundData);
+    if (withTicket) {
+      ipcRenderer.send('process-refund-with-ticket', refundData);
+    } else {
+      ipcRenderer.send('process-refund', refundData);
+    }
+  }
+
+  processRefundBtn.addEventListener('click', () => {
+    processRefund(false);
   });
 
-  // Escuchar la respuesta del proceso principal
+  processRefundWithTicketBtn.addEventListener('click', () => {
+    processRefund(true);
+  });
+
   ipcRenderer.on('refund-processed', (event, result) => {
     if (result.success) {
       alert(result.message);
-      // Actualizar el historial de reembolsos y regresar al historial de ventas
       loadRefundsHistory();
       backToSalesBtn.click();
       loadSalesHistory();

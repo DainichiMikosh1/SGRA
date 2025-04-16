@@ -1,5 +1,6 @@
+// windows/sellProductWindow.js (ejemplo actualizado)
 const path = require('path');
-const db = require(path.join(__dirname, '.', '..', 'database.js'));
+const db = require(path.join(__dirname, '..', 'database.js'));
 const { ipcRenderer } = require('electron'); 
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -8,13 +9,13 @@ window.addEventListener('DOMContentLoaded', () => {
   const searchResults = document.getElementById('searchResults');
   const cartTableBody = document.querySelector('#cartTable tbody');
   const totalAmountSpan = document.getElementById('totalAmount');
-  const confirmSaleBtn = document.getElementById('confirmSaleBtn');
+  const goToPaymentBtn = document.getElementById('goToPaymentBtn');
 
-  let cart = []; // Array para almacenar los productos en el carrito
-  let loggedUserId = null; // ID del usuario logueado
+  let cart = [];
+  let loggedUserId = null;
 
   ipcRenderer.on('set-logged-user-id', (event, userId) => {
-    loggedUserId = userId; // Guardar el ID del usuario
+    loggedUserId = userId;
   });
 
   // Función para buscar productos
@@ -57,18 +58,15 @@ window.addEventListener('DOMContentLoaded', () => {
 
   // Función para agregar producto al carrito
   function addToCart(product, quantity) {
-    // Verificar si el producto ya está en el carrito
     const existingProduct = cart.find((item) => item.id === product.id);
 
     if (existingProduct) {
-      // Actualizar la cantidad
       if (existingProduct.quantity + quantity <= product.stock) {
         existingProduct.quantity += quantity;
       } else {
         alert(`No hay suficiente stock para agregar ${quantity} unidades más de este producto.`);
       }
     } else {
-      // Agregar nuevo producto al carrito
       if (quantity <= product.stock) {
         cart.push({
           id: product.id,
@@ -96,16 +94,12 @@ window.addEventListener('DOMContentLoaded', () => {
       const subtotal = item.price * item.quantity;
       totalAmount += subtotal;
 
-      //Cambiar dev mode o user mode
       const imagePath = item.ImagePath ? path.join(process.resourcesPath, item.ImagePath) : '';
-      //const imagePath = item.ImagePath ? path.join(__dirname, item.ImagePath) : '';
       const imageUrl = imagePath ? `file://${imagePath}` : '';
 
       const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td>
-        <img src="${imageUrl}" alt="Imagen del Producto" style="max-width: 100px; height: auto;">
-        </td>
+        <td><img src="${imageUrl}" alt="Imagen del Producto" style="max-width: 100px; height: auto;"></td>
         <td>${item.description}</td>
         <td>${item.model}</td>
         <td>$${item.price}</td>
@@ -115,7 +109,6 @@ window.addEventListener('DOMContentLoaded', () => {
       `;
       cartTableBody.appendChild(tr);
 
-      // Manejar eliminación de producto del carrito
       const removeButton = tr.querySelector('button');
       removeButton.addEventListener('click', () => {
         cart.splice(index, 1);
@@ -126,72 +119,17 @@ window.addEventListener('DOMContentLoaded', () => {
     totalAmountSpan.textContent = totalAmount.toFixed(2);
   }
 
- // Función para confirmar la venta
- function confirmSale() {
-  if (cart.length === 0) {
-    alert('El carrito está vacío.');
-    return;
+  function openPaymentWindow() {
+    if (cart.length === 0) {
+      alert('El carrito está vacío.');
+      return;
+    }
+    // Enviamos los datos al main para abrir la ventana de caja
+    updateCartUI();
+    ipcRenderer.send('open-payment-window', { cart, total: parseFloat(totalAmountSpan.textContent), userId: loggedUserId });
   }
 
-  db.serialize(() => {
-    db.run('BEGIN TRANSACTION');
-
-    let errorOccurred = false;
-
-    cart.forEach((item) => {
-      const subtotal = item.price * item.quantity;
-
-      db.get('SELECT stock FROM inventory WHERE id = ?', [item.id], (err, row) => {
-        if (err) {
-          console.error('Error al verificar el stock:', err);
-          errorOccurred = true;
-          return;
-        }
-
-        if (row.stock >= item.quantity) {
-          db.run(
-            'UPDATE inventory SET stock = stock - ? WHERE id = ?',
-            [item.quantity, item.id],
-            (err) => {
-              if (err) {
-                console.error('Error al actualizar el stock:', err);
-                errorOccurred = true;
-                return;
-              }
-            }
-          );
-
-          db.run(
-            'INSERT INTO sales (product_id, quantity, sale_date, subtotal, user_id) VALUES (?, ?, ?, ?, ?)',
-            [item.id, item.quantity, new Date().toISOString(), subtotal, loggedUserId],
-            (err) => {
-              if (err) {
-                console.error('Error al registrar la venta:', err);
-                errorOccurred = true;
-                return;
-              }
-            }
-          );
-        } else {
-          alert(`No hay suficiente stock para vender ${item.quantity} unidades de ${item.description}.`);
-          errorOccurred = true;
-          return;
-        }
-      });
-    });
-
-    if (errorOccurred) {
-      db.run('ROLLBACK');
-      alert('Ocurrió un error al procesar la venta.');
-    } else {
-      db.run('COMMIT');
-      alert('Venta realizada exitosamente.');
-      cart = [];
-      updateCartUI();
-    }
-  });
-}
   // Eventos
   searchBtn.addEventListener('click', searchProducts);
-  confirmSaleBtn.addEventListener('click', confirmSale);
+  goToPaymentBtn.addEventListener('click', openPaymentWindow);
 });
