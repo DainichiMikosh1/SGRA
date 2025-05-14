@@ -8,11 +8,17 @@ if (!fs.existsSync(dataDir)) {
   fs.mkdirSync(dataDir);
 }
 
-//APP FINAL
-const dbPath = path.join(process.resourcesPath, 'app', 'data', 'database.db');
-//CAMBIAR UBICACION DE LA BASE DE DATOS
-//APP DESARROLLO
-//const dbPath = path.join(__dirname, 'app', 'data', 'database.db');
+// Determinar la ruta de la base de datos según el entorno
+let dbPath;
+if (process.resourcesPath) {
+  // APP FINAL (empaquetada con Electron)
+  dbPath = path.join(process.resourcesPath, 'app', 'data', 'database.db');
+} else {
+  // APP DESARROLLO (ejecución directa con Node.js)
+  dbPath = path.join(__dirname, 'app', 'data', 'database.db');
+}
+
+console.log('Usando ruta de base de datos:', dbPath);
 
 // Abre la conexión a la base de datos
 const db = new sqlite3.Database(dbPath, (err) => {
