@@ -20,9 +20,12 @@
     "bcryptjs": "^2.4.3",
     "chart.js": "^4.4.5",
     "dotenv": "^16.4.5",
+    "google-auth-library": "^9.15.1",
     "node-schedule": "^2.1.1",
     "nodemailer": "^6.9.16",
+    "open": "^10.1.2",
     "pdfkit": "^0.16.0",
+    "server-destroy": "^1.0.1",
     "sqlite3": "^5.1.7"
   },
   "build": {

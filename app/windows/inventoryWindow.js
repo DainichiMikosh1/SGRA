@@ -9,6 +9,16 @@ const PDFDocument = require('pdfkit');
 // Variable global:
 let chart;
 
+function createMailTransporter() {
+  return nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'desmadrrados01@gmail.com',
+      pass: 'zssj kaeb tohu zhor' // La contraseña que copiaste
+    }
+  });
+}
+
 window.addEventListener('DOMContentLoaded', () => {
   const inventoryTableBody = document.querySelector('#inventoryTable tbody');
   const searchInput = document.getElementById('searchInput');
@@ -177,11 +187,9 @@ window.addEventListener('DOMContentLoaded', () => {
                 const supplierPrice = supplierInfo.price !== null ? supplierInfo.price : 'N/A';
 
                 // Obtener la ruta de la imagen y convertirla en una URL accesible
-                //Camabiar dev mode o user mode
-                //const imagePath = row.image_path ? path.join(__dirname, row.image_path) : '';
                 const imagePath = row.image_path ? path.join(process.resourcesPath, row.image_path) : '';
-                const imageUrl = imagePath ? `file://${imagePath}` : ''; // Generar URL con el prefijo `file://`
-
+                const imageUrl = imagePath ? `file://${imagePath}` : '';
+                
                 tr.innerHTML = `
                     <td>${row.category}</td>
                     <td>${row.description}</td>
@@ -192,7 +200,7 @@ window.addEventListener('DOMContentLoaded', () => {
                     <td>${row.stock}</td>
                     <td>${supplierAvailability}</td>
                     <td>${supplierPrice}</td>
-                    <td>
+                    <td> 
                         <img src="${imageUrl}" alt="Imagen del Producto" style="max-width: 100px; height: auto;">
                     </td>
                     <td>
@@ -202,39 +210,20 @@ window.addEventListener('DOMContentLoaded', () => {
                 `;
 
                 inventoryTableBody.appendChild(tr);
-            });
 
-            // Agregar eventos a los botones de editar
-            const editButtons = document.querySelectorAll('.editBtn');
-            editButtons.forEach((button) => {
-                button.addEventListener('click', () => {
-                    const productId = button.getAttribute('data-id');
-                    ipcRenderer.send('open-add-product-window', productId);
+                // AQUÍ ESTÁ LA SOLUCIÓN - Asignar el event listener solo al botón de esta fila
+                const editButton = tr.querySelector('.editBtn');
+                editButton.addEventListener('click', () => {
+                    const productId = editButton.getAttribute('data-id');
+                    ipcRenderer.send('open-edit-product-window', productId);
                 });
-            });
 
-            const deleteButton = document.querySelectorAll('.deleteBtn');
-            deleteButton.forEach((button) => {
-                button.addEventListener('click', () => {
-                    const productId = button.getAttribute('data-id');
+                const deleteButton = tr.querySelector('.deleteBtn');
+                deleteButton.addEventListener('click', () => {
+                    const productId = deleteButton.getAttribute('data-id');
                     deleteProduct(productId);
                 });
             });
-
-            const deleteProduct = (productId) => {
-                const confirmResponse = confirm('¿Estás seguro de que deseas eliminar este producto?');
-
-                if (confirmResponse) {
-                    db.run('DELETE FROM inventory WHERE id = ?', [productId], (err) => {
-                        if (err) {
-                            console.error('Error al eliminar el producto:', err);
-                        } else {
-                            alert('Producto eliminado exitosamente.');
-                            loadInventory();
-                        }
-                    });
-                }
-            }
         }
     });
 }
@@ -304,23 +293,13 @@ window.addEventListener('DOMContentLoaded', () => {
 
   // Función para enviar correo electrónico
   function sendOrderEmail(missingProducts) {
-    const nodemailer = require('nodemailer');
-    require('dotenv').config();
-
-    let transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: "alvaradomando22@gmail.com",
-        pass: "zghf qhwk lbjf lrwp",
-      },
-    });
+    const transporter = createMailTransporter();
 
     let mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: 'juandiegotorreslopez61@gmail.com',
+      to: 'desmadrrados01@gmail.com',
       subject: 'Pedido de Reabastecimiento',
       text: `Estimado proveedor, necesitamos reabastecer los siguientes productos:\n\n${missingProducts}`,
-    };
+    }; 
 
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
@@ -404,18 +383,10 @@ window.addEventListener('DOMContentLoaded', () => {
   // Función para enviar el correo
   async function sendMonthlyReport(month, year) {
     const pdfPath = await generatePDF(month, year);
-  
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: 'alvaradomando22@gmail.com',
-        pass: 'zghf qhwk lbjf lrwp'
-      }
-    });
+    const transporter = createMailTransporter();
   
     const mailOptions = {
-      from: 'alvaradomando22@gmail.com',
-      to: 'juandiegotorreslopez61@gmail.com',
+      to: 'desmadrrados01@gmail.com', 
       subject: `Reporte Mensual - ${month}/${year}`,
       text: `Adjunto el reporte del mes ${month} del año ${year}.`,
       attachments: [

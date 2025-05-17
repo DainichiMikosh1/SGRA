@@ -10,13 +10,11 @@ if (!fs.existsSync(dataDir)) {
 
 // Determinar la ruta de la base de datos según el entorno
 let dbPath;
-if (process.resourcesPath) {
-  // APP FINAL (empaquetada con Electron)
-  dbPath = path.join(process.resourcesPath, 'app', 'data', 'database.db');
-} else {
-  // APP DESARROLLO (ejecución directa con Node.js)
-  dbPath = path.join(__dirname, 'app', 'data', 'database.db');
-}
+// APP FINAL (empaquetada con Electron)
+ dbPath = path.join(process.resourcesPath, 'app', 'data', 'database.db');
+// APP DESARROLLO (ejecución directa con Node.js)
+// dbPath = path.join(__dirname, 'app', 'data', 'database.db');
+
 
 console.log('Usando ruta de base de datos:', dbPath);
 

@@ -25,8 +25,12 @@ ipcMain.on('open-inventory-window', () => {
   createInventoryWindow();
 });
 
-ipcMain.on('open-add-product-window', (event, productId) => {
-  createAddProductWindow(productId);
+ipcMain.on('open-add-product-window', () => {
+  createProductFormWindow();
+});
+
+ipcMain.on('open-edit-product-window', (event, productId) => {
+  createProductFormWindow(productId);
 });
 
 ipcMain.on('product-added', () => {
@@ -204,7 +208,7 @@ function createMainWindow() {
       contextIsolation: false,
     },
   });
-  mainWindow.maximize();
+  mainWindow.maximize(); 
 
   mainWindow.loadFile(path.join(__dirname, 'app', 'index.html'));
 
@@ -228,29 +232,40 @@ function createInventoryWindow() {
   });
   inventoryWindow.maximize();
   inventoryWindow.loadFile(path.join(__dirname, 'app', 'inventory.html'));
+  
+  // Estos eventos son para que el inventario pueda lanzar los formularios de edición y adición
+  inventoryWindow.webContents.on('did-finish-load', () => {
+    inventoryWindow.webContents.executeJavaScript(`
+      window.ipcRendererEvents = {
+        openAddProductWindow: () => {
+          window.ipcRenderer.send('open-add-product-window');
+        },
+        openEditProductWindow: (productId) => {
+          window.ipcRenderer.send('open-edit-product-window', productId);
+        }
+      };
+    `);
+  });
 }
 
-function createAddProductWindow(productId) {
-  const addProductWindow = new BrowserWindow({
-    width: 400,
-    height: 600,
-    parent: mainWindow,
-    modal: true,
+function createProductFormWindow(productId = null) {
+  const productFormWindow = new BrowserWindow({
+    width: 900,
+    height: 700,
     webPreferences: {
       preload: path.join(__dirname, 'app', 'windows', 'productFormWindow.js'),
       nodeIntegration: true,
       contextIsolation: false,
     },
   });
-  addProductWindow.maximize();
 
-  addProductWindow.loadFile(path.join(__dirname, 'app', 'productForm.html'));
-
-  // Enviar el ID del producto si es edición
+  // Si hay ID, pasar como parámetro en la URL
   if (productId) {
-    addProductWindow.webContents.on('did-finish-load', () => {
-      addProductWindow.webContents.send('edit-product', productId);
-    });
+    const url = `file://${path.join(__dirname, 'app', 'productForm.html')}?id=${encodeURIComponent(productId)}`;
+    console.log('Cargando formulario para editar producto:', url);
+    productFormWindow.loadURL(url);
+  } else {
+    productFormWindow.loadFile(path.join(__dirname, 'app', 'productForm.html'));
   }
 }
 
@@ -462,3 +477,16 @@ function createRefundTicketWindow(refundData) {
     refundTicketWin.webContents.send('refund-data', { refund: refundData });
   });
 }
+
+// Nuevos listeners para actualizar el inventario
+ipcMain.on('refresh-inventory', () => {
+  if (mainWindow) {
+    mainWindow.webContents.send('refresh-inventory');
+  }
+});
+
+ipcMain.on('product-updated', () => {
+  if (mainWindow) {
+    mainWindow.webContents.send('refresh-inventory');
+  }
+});

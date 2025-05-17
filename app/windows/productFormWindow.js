@@ -1,118 +1,222 @@
-const { ipcRenderer, remote } = require('electron');
+const { ipcRenderer } = require('electron');
 const path = require('path');
 const fs = require('fs');
-const db = require(path.join(__dirname, '..', 'database.js'));
-
-// Ruta hacia la carpeta de imágenes en recursos externos
-const imagesDir = path.join(process.resourcesPath, 'images', 'productos');
+const db = require('../../database.js');
 
 window.addEventListener('DOMContentLoaded', () => {
   const productForm = document.getElementById('productForm');
-  const productImage = document.getElementById('productImage');
   const formTitle = document.getElementById('formTitle');
-
-  let isEditMode = false;
-  let editProductId = null;
-
-  ipcRenderer.on('edit-product', (event, productId) => {
+  const saveButtonText = document.getElementById('saveButtonText');
+  const imagePreview = document.getElementById('imagePreview');
+  const productImageInput = document.getElementById('productImage');
+  const currentImagePathInput = document.getElementById('currentImagePath');
+  
+  // Obtener ID del producto de los parámetros URL (si existe)
+  const params = new URLSearchParams(window.location.search);
+  const productId = params.get('id');
+  
+  // Determinar si estamos en modo edición o adición
+  const isEditMode = !!productId;
+  
+  console.log('Modo formulario:', isEditMode ? 'Editar Producto' : 'Añadir Producto');
+  
+  // Configurar el formulario según el modo
+  if (isEditMode) {
     formTitle.textContent = 'Editar Producto';
-    isEditMode = true;
-    editProductId = productId;
-
-    db.get('SELECT * FROM inventory WHERE id = ?', [productId], (err, row) => {
+    saveButtonText.textContent = 'Actualizar Producto';
+    
+    // El campo de imagen no es obligatorio en modo edición
+    productImageInput.removeAttribute('required');
+    
+    // Cargar datos del producto
+    loadProductData(productId);
+  } else {
+    formTitle.textContent = 'Añadir Producto';
+    saveButtonText.textContent = 'Guardar Producto';
+    
+    // La imagen es requerida para nuevos productos
+    productImageInput.setAttribute('required', 'required');
+  }
+  
+  // Función para cargar los datos del producto en modo edición
+  function loadProductData(id) {
+    console.log('Cargando datos del producto ID:', id);
+    
+    db.get('SELECT * FROM inventory WHERE id = ?', [id], (err, product) => {
       if (err) {
-        console.error('Error al obtener el producto:', err);
-      } else {
-        productForm.category.value = row.category;
-        productForm.description.value = row.description;
-        productForm.serial_number.value = row.serial_number;
-        productForm.model.value = row.model;
-        productForm.year.value = row.year;
-        productForm.price.value = row.price;
-        productForm.stock.value = row.stock;
-      }
-    });
-  });
-
-  productForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const productData = {
-      category: productForm.category.value,
-      description: productForm.description.value,
-      serial_number: productForm.serial_number.value,
-      model: productForm.model.value,
-      year: parseInt(productForm.year.value),
-      price: parseFloat(productForm.price.value),
-      stock: parseInt(productForm.stock.value),
-    };
-
-    const file = productImage.files[0];
-
-    if (file) {
-      if (!fs.existsSync(imagesDir)) {
-        fs.mkdirSync(imagesDir, { recursive: true }); // Crear la carpeta si no existe
-      }
-
-      const destPath = path.join(imagesDir, file.name);
-
-      try {
-        const arrayBuffer = await file.arrayBuffer(); // Leer archivo como ArrayBuffer
-        const buffer = Buffer.from(arrayBuffer); // Convertir a Buffer
-        fs.writeFileSync(destPath, buffer); // Guardar el archivo
-        productData.imagePath = path.relative(process.resourcesPath, destPath); // Guardar la ruta relativa
-      } catch (err) {
-        console.error('Error al guardar la imagen:', err);
+        console.error('Error al cargar el producto:', err);
+        alert('Error al cargar los datos del producto.');
         return;
       }
+      
+      if (!product) {
+        console.error('Producto no encontrado con ID:', id);
+        alert('Error: Producto no encontrado');
+        window.close();
+        return;
+      }
+      
+      console.log('Datos del producto obtenidos:', product);
+      
+      // Rellenar formulario con datos del producto
+      document.getElementById('description').value = product.description || '';
+      document.getElementById('category').value = product.category || '';
+      document.getElementById('model').value = product.model || '';
+      document.getElementById('serial_number').value = product.serial_number || '';
+      document.getElementById('year').value = product.year || '';
+      document.getElementById('price').value = product.price || '';
+      document.getElementById('stock').value = product.stock || '';
+      
+      // Guardar la ruta de imagen actual en el campo oculto
+      if (product.image_path) {
+        currentImagePathInput.value = product.image_path;
+        
+        // Mostrar la imagen actual
+        let imageUrl;
+        
+        try {
+          // Intentar determinar si estamos en producción o desarrollo
+          if (process && process.resourcesPath) {
+            // Modo producción
+            imageUrl = `file://${path.join(process.resourcesPath, product.image_path)}`;
+          } else {
+            // Modo desarrollo
+            imageUrl = `file://${path.join(__dirname, '../..', product.image_path)}`;
+          }
+          
+          imagePreview.innerHTML = `<img src="${imageUrl}" alt="${product.description}" onerror="this.onerror=null; this.src='images/no-image.png';">`;
+        } catch (error) {
+          console.error('Error al cargar la imagen:', error);
+          imagePreview.innerHTML = `
+            <div class="image-preview-placeholder">
+              <p>Error al cargar la imagen</p>
+            </div>
+          `;
+        }
+      }
+    });
+  }
+  
+  // Vista previa de imagen
+  productImageInput.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        imagePreview.innerHTML = `<img src="${event.target.result}" alt="Vista previa">`;
+      }
+      reader.readAsDataURL(file);
     }
-
-    if (isEditMode) {
-      db.run(
-        `UPDATE inventory SET category = ?, description = ?, serial_number = ?, model = ?, year = ?, price = ?, stock = ?, image_path = ? WHERE id = ?`,
-        [
-          productData.category,
-          productData.description,
-          productData.serial_number,
-          productData.model,
-          productData.year,
-          productData.price,
-          productData.stock,
-          productData.imagePath || '',
-          editProductId,
-        ],
-        function (err) {
-          if (err) {
-            console.error('Error al actualizar el producto:', err);
-          } else {
-            ipcRenderer.send('product-added');
-            window.close();
+  });
+  
+  // Manejar envío del formulario
+  productForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Crear FormData para obtener todos los campos
+    const formData = new FormData(productForm);
+    
+    // Obtener datos del producto
+    const productData = {
+      description: formData.get('description'),
+      category: formData.get('category'),
+      model: formData.get('model'),
+      serial_number: formData.get('serial_number'),
+      year: formData.get('year'),
+      price: formData.get('price'),
+      stock: formData.get('stock')
+    };
+    
+    // Función para guardar o actualizar el producto en la BD según el modo
+    const saveProduct = (imagePath) => {
+      // Si estamos en modo edición y no hay nueva imagen, usar la existente
+      if (isEditMode && !imagePath) {
+        imagePath = formData.get('currentImagePath');
+      }
+      
+      if (isEditMode) {
+        // Actualizar producto existente
+        db.run(
+          `UPDATE inventory 
+           SET description = ?, category = ?, model = ?, serial_number = ?, 
+               year = ?, price = ?, stock = ?, image_path = ?
+           WHERE id = ?`,
+          [
+            productData.description, productData.category, productData.model, 
+            productData.serial_number, productData.year, productData.price, 
+            productData.stock, imagePath, productId
+          ],
+          function(err) {
+            if (err) {
+              console.error('Error al actualizar el producto:', err);
+              alert('Error al actualizar el producto.');
+            } else {
+              alert('Producto actualizado con éxito.');
+              ipcRenderer.send('refresh-inventory');
+              window.close();
+            }
           }
-        }
-      );
+        );
+      } else {
+        // Insertar nuevo producto
+        db.run(
+          `INSERT INTO inventory (description, category, model, serial_number, year, price, stock, image_path) 
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+          [
+            productData.description, productData.category, productData.model, 
+            productData.serial_number, productData.year, productData.price, 
+            productData.stock, imagePath
+          ],
+          function(err) {
+            if (err) {
+              console.error('Error al insertar el producto:', err);
+              alert('Error al insertar el producto.');
+            } else {
+              alert('Producto añadido con éxito.');
+              ipcRenderer.send('refresh-inventory');
+              window.close();
+            }
+          }
+        );
+      }
+    };
+    
+    // Procesar la imagen si existe
+    const imageFile = productImageInput.files[0];
+    if (imageFile) {
+      // Crear directorio para imágenes si no existe
+      const imagesDir = path.join(__dirname, '../../images/productos');
+      if (!fs.existsSync(imagesDir)) {
+        fs.mkdirSync(imagesDir, { recursive: true });
+      }
+      
+      // Generar un nombre único para la imagen
+      const timestamp = Date.now();
+      const filename = `${timestamp}-${imageFile.name}`;
+      const imagePath = path.join('images/productos', filename);
+      const fullPath = path.join(__dirname, '../../', imagePath);
+      
+      // Leer y guardar la imagen
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const buffer = Buffer.from(event.target.result);
+        fs.writeFile(fullPath, buffer, (err) => {
+          if (err) {
+            console.error('Error al guardar la imagen:', err);
+            alert('Error al guardar la imagen.');
+            saveProduct(null); // Mantener imagen original en modo edición
+          } else {
+            console.log('Imagen guardada:', fullPath);
+            saveProduct(imagePath);
+          }
+        });
+      };
+      reader.readAsArrayBuffer(imageFile);
     } else {
-      db.run(
-        `INSERT INTO inventory (category, description, serial_number, model, year, price, stock, image_path) 
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-        [
-          productData.category,
-          productData.description,
-          productData.serial_number,
-          productData.model,
-          productData.year,
-          productData.price,
-          productData.stock,
-          productData.imagePath || '',
-        ],
-        function (err) {
-          if (err) {
-            console.error('Error al añadir el producto:', err);
-          } else {
-            ipcRenderer.send('product-added');
-            window.close();
-          }
-        }
-      );
+      // Si no hay imagen nueva:
+      // - En modo añadir, esto debería bloquearse por el atributo required
+      // - En modo editar, guardamos con la imagen existente
+      saveProduct(null);
     }
   });
 });
