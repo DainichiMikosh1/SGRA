@@ -1,4 +1,4 @@
-# SGRA - Sistema de Gestión de Repuestos de GARA
+# SGRA - Sistema Gestor de Refacciones Automotrices
 
 **SGRA** es una aplicación de escritorio multiplataforma (Windows/macOS/Linux) desarrollada con Electron y SQLite3 para gestionar inventario de piezas, ventas, reembolsos, pedidos y reportes.
 
